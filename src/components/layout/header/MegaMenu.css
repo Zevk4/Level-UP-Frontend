@@ -1,0 +1,88 @@
+/* =====================================
+   ESTILOS DESKTOP (por defecto)
+   ===================================== */
+/* ... (Todos los estilos de .menu-container, .menu-trigger, .mega-menu, .menu-column, etc.,
+   se quedan EXACTAMENTE IGUAL que en la versión estable) ... */
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+.menu-trigger {
+  background: var(--color-fondo-claro);
+  color: var(--color-texto);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+.menu-trigger:hover {
+  background: #333;
+  border-color: var(--color-principal);
+}
+.mega-menu {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #111111;
+  border: 1px solid #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+.mega-menu.is-open {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+}
+.menu-column {
+  display: flex; flex-direction: column; gap: 15px; min-width: 200px;
+}
+.menu-column .category-title {
+  color: var(--color-principal); font-family: 'Orbitron', sans-serif;
+  border-bottom: 2px solid var(--color-principal);
+  padding-bottom: 5px; margin: 0; text-decoration: none;
+}
+.menu-column .category-title:hover { color: #33a0ff; }
+.menu-column ul {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.menu-column li a {
+  color: var(--color-texto); text-decoration: none;
+  display: block; padding: 2px 0; transition: color 0.3s ease;
+}
+.menu-column li a:hover { color: var(--color-secundario); }
+.menu-column .view-all-link {
+  color: var(--color-principal) !important; font-weight: bold;
+}
+.menu-column .view-all-link:hover { color: var(--color-secundario) !important; }
+
+
+/* =====================================
+   ESTILOS MÓVIL (Layout 'solotodo.cl')
+   ===================================== */
+@media (max-width: 991.98px) {
+  
+  /* En móvil, el componente MegaMenu es solo la lista,
+     por lo que no necesitamos estilizar el 'menu-trigger' o el 'menu-container'
+     porque no se renderizan (gracias a la lógica de MegaMenu.tsx).
+  */
+
+  /* El panel del MegaMenu (lista de categorías) */
+  .navbar-collapse .menu-column {
+    min-width: 100%;
+    gap: 10px;
+  }
+}

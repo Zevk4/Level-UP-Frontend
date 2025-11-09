@@ -1,0 +1,73 @@
+/*=====================================
+  4. Pie de página (Footer)
+  =====================================*/
+
+  
+footer.bg-dark {
+    background-color: #1a1a1a !important;
+}
+
+footer h3 {
+    color: var(--color-principal);
+}
+
+/* POR ESTO: */
+#footerMap {
+    width: 100%;
+    height: 300px; /* Le da altura al mapa */
+    border-radius: 8px;
+    background-color: #333; /* Color de fondo mientras carga */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1; /* Asegura que el mapa esté visible */
+}
+
+/* Estilos para los íconos de redes sociales */
+.social-links a {
+    /* font-size: 50px; (Eliminado, ya no es necesario) */
+    margin: 0 10px;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* NUEVA REGLA: Dar tamaño a los SVGs */
+.social-links a svg {
+    width: 40px;  /* Ajusta el tamaño aquí */
+    height: 40px; /* Ajusta el tamaño aquí */
+}
+
+.social-links a:hover {
+    opacity: 0.7;
+}
+
+/* Colores de las redes sociales */
+/* (Los SVGs con 'fill="currentColor"' heredarán estos colores) */
+.social-links a:nth-of-type(1) { color: #3b5998; }
+.social-links a:nth-of-type(2) { color: #E1306C; }
+.social-links a:nth-of-type(3) { color: #0077b5; }
+.social-links a:nth-of-type(4) { color: #ffffff; } /* X/Twitter blanco */
+.social-links a:nth-of-type(5) { color: #FF0000; }
+
+/* Separador de Copyright */
+.footer-divider {
+    border-top: 1px solid var(--color-secundario);
+    opacity: 1; 
+    margin-top: 2rem;
+}
+
+/*
+  Este 'wrapper' reemplaza al <Container> de Bootstrap
+  y le aplica el mismo padding que tus otros componentes.
+*/
+.footer-content-wrapper {
+  /* Aplicamos el padding horizontal de 55px */
+  padding-left: 55px;
+  padding-right: 55px;
+  
+  /* Mantenemos el centrado y ancho máximo 
+     (tomado de tu style.css original) */
+  width: 100%;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}

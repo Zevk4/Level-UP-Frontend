@@ -1,0 +1,92 @@
+[
+  {
+    "codigo": "JM001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654400/JM001_mnkzo4.webp",
+    "categoria": "Juegos",
+    "subcategoria": "Juegos de Mesa",
+    "nombre": "Catan",
+    "precio": 29990,
+    "descripcion": "Juego clásico de estrategia y comercio."
+  },
+  {
+    "codigo": "JM002",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654400/JM002_uqu07e.jpg",
+    "categoria": "Juegos",
+    "subcategoria": "Juegos de Mesa",
+    "nombre": "Carcassonne",
+    "precio": 24990,
+    "descripcion": "Juego de losetas para crear paisajes y competir."
+  },
+  {
+    "codigo": "AC001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654398/AC001_mj4wm9.webp",
+    "categoria": "Perifericos",
+    "subcategoria": "Controles",
+    "nombre": "Control Inalámbrico Xbox Series X",
+    "precio": 59990,
+    "descripcion": "Control inalámbrico para Xbox Series X y PC."
+  },
+  {
+    "codigo": "AC002",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654399/AC002_ra3yz3.webp",
+    "categoria": "Perifericos",
+    "subcategoria": "Auriculares Gamer",
+    "nombre": "Auriculares Gamer HyperX Cloud II",
+    "precio": 79990,
+    "descripcion": "Sonido envolvente con micrófono desmontable y máxima comodidad."
+  },
+  {
+    "codigo": "CO001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654399/CO001_krgiux.webp",
+    "categoria": "Consolas",
+    "subcategoria": "PlayStation",
+    "nombre": "PlayStation 5",
+    "precio": 549990,
+    "descripcion": "Consola de nueva generación con gráficos y carga ultrarrápida."
+  },
+  {
+    "codigo": "CG001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654399/CG001_nofu3k.jpg",
+    "categoria": "Computacion",
+    "subcategoria": "PC Escritorio",
+    "nombre": "PC ASUS ROG Strix G10",
+    "precio": 1299990,
+    "descripcion": "PC de alto rendimiento diseñado para gamers exigentes."
+  },
+  {
+    "codigo": "SG001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654403/SG001_e8ayn1.jpg",
+    "categoria": "Sillas Gamer",
+    "subcategoria": "Secretlab",
+    "nombre": "Silla Gamer Secretlab Titan",
+    "precio": 349990,
+    "descripcion": "Silla ergonómica con soporte ajustable para largas sesiones."
+  },
+  {
+    "codigo": "MO001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654402/MO001_ovhde4.jpg",
+    "categoria": "Perifericos",
+    "subcategoria": "Mouse Gamer",
+    "nombre": "Mouse Logitech G502 HERO",
+    "precio": 49990,
+    "descripcion": "Sensor avanzado y botones personalizables."
+  },
+  {
+    "codigo": "MP001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654402/MP001_qzr8zg.webp",
+    "categoria": "Accesorios",
+    "subcategoria": "Mousepad",
+    "nombre": "Razer Goliathus Extended Chroma",
+    "precio": 29990,
+    "descripcion": "Superficie amplia con iluminación RGB."
+  },
+  {
+    "codigo": "PP001",
+    "imagen": "https://res.cloudinary.com/dinov1bgq/image/upload/v1762654402/PP001_egobab.jpg",
+    "categoria": "Poleras Personalizadas",
+    "subcategoria": "Otras",
+    "nombre": "Polera Gamer \"Level Up\"",
+    "precio": 14990,
+    "descripcion": "Personalizable con tu gamer tag o diseño."
+  }
+]

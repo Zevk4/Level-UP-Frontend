@@ -1,0 +1,164 @@
+/* =====================================
+   ESTILOS DESKTOP (lg y superior)
+   ===================================== */
+
+.custom-navbar {
+    background-color: var(--color-fondo); /* Negro puro */
+    border-bottom: 1px solid var(--color-fondo-claro);
+}
+
+.custom-navbar .vr {
+    color: #fff;
+    opacity: 0.60;
+}
+
+.custom-search-bar {
+    border: 2px solid var(--color-secundario);
+    border-radius: 30px;
+    background: #0a0f1f;
+    box-shadow: 0 0 12px var(--color-secundario);
+    transition: box-shadow 0.3s ease-in-out;
+    padding: 2px;
+    background-color: transparent !important;
+}
+
+.custom-search-bar:hover {
+    box-shadow: 0 0 25px var(--color-principal), 0 0 10px var(--color-secundario) inset;
+}
+
+.custom-search-bar .form-control {
+    border: none; background: none; outline: none;
+    color: #fff; font-size: 16px; box-shadow: none;
+}
+
+.custom-search-bar .form-control::placeholder {
+    color: #aaa; transition: color 0.3s ease;
+}
+
+.custom-search-bar .form-control:focus {
+    background: none; color: #fff; box-shadow: none;
+}
+
+.custom-search-bar .form-control:focus::placeholder {
+    color: var(--color-secundario);
+}
+
+.search-form-container {
+  position: relative;
+  flex-grow: 1;
+}
+
+.search-results-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background-color: var(--color-fondo-claro);
+  border: 1px solid #333; border-top: none;
+  border-radius: 0 0 10px 10px; z-index: 1001;
+  max-height: 400px; overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.search-result-item {
+  background-color: transparent !important; color: var(--color-texto) !important;
+  border-bottom: 1px solid #333; display: flex; align-items: center;
+  gap: 15px; padding: 10px;
+}
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background-color: #333 !important; }
+.search-result-item img {
+  width: 50px; height: 50px; object-fit: contain;
+  background-color: #fff; border-radius: 4px;
+}
+.search-result-item .info { flex-grow: 1; }
+.search-result-item .name {
+  font-size: 1em; font-weight: bold; color: var(--color-principal);
+}
+.search-result-item .price {
+  font-size: 0.9em; color: var(--color-secundario);
+}
+
+
+/* =====================================
+   ESTILOS RESPONSIVOS DEL HEADER (MÓVIL)
+   ¡SECCIÓN CORREGIDA!
+   ===================================== */
+@media (max-width: 991.98px) {
+  
+  .custom-navbar .navbar-toggler {
+    border: none !important; 
+    box-shadow: none !important; 
+  }
+
+  .custom-navbar .navbar-toggler:focus {
+    box-shadow: none !important;
+  }
+  .custom-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
+  .icon-button {
+    color: var(--color-texto) !important;
+    border: none !important;
+    background: none !important; /* ¡Forzamos el fondo transparente! */
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: none !important; 
+  }
+
+  .custom-navbar .navbar-collapse {
+    width: 100%;
+    position: relative !important;
+    height: auto !important;
+    overflow: hidden !important;
+    flex-basis: auto !important;
+    
+  }
+
+  /* El panel de búsqueda (el <div> con el ID) */
+  #mobile-search-nav {
+    transition: height 0.35s ease, opacity 0.35s ease-out;
+    opacity: 0;
+  }
+  
+  /* Cuando está abierto (Bootstrap añade la clase '.show') */
+  #mobile-search-nav.show {
+    /* 3. Estado final (abierto): totalmente visible */
+    opacity: 1;
+  }
+
+  /*Animación para MENÚ (Categorías) --- */
+  /*
+    Bootstrap usa 'navbar-collapse' para la transición de altura.
+    Nosotros le añadimos la transición de opacidad.
+  */
+  .navbar-collapse#mobile-menu-nav {
+    transition: height 0.35s ease, opacity 0.35s ease-out;
+    opacity: 0; /* Cerrado es transparente */
+    /* Aseguramos que sea 'hidden' cuando no tiene 'show' 
+       para que 'opacity: 0' funcione
+    */
+    visibility: hidden; 
+  }
+  
+  .navbar-collapse#mobile-menu-nav.show {
+    opacity: 1; /* Abierto es visible */
+    visibility: visible;
+  }
+  /* 4. AÑADIMOS la animación de "slide-in" AL CONTENIDO
+   del panel de menú cuando se muestra */
+  .navbar-collapse#mobile-menu-nav.show .mt-3 {
+    animation: slideInFromLeft 0.1s ease-out;
+  }
+
+    /* 5. AÑADIMOS la definición de la animación */
+  @keyframes slideInFromLeft {
+    from {
+      transform: translateX(-30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+}

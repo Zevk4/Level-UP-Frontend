@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "email": "admin@levelup.cl",
+    "password": "admin123",
+    "nombre": "Admin LevelUp",
+    "role": "admin"
+  },
+  {
+    "id": "2",
+    "email": "vendedor@levelup.cl",
+    "password": "vende123",
+    "nombre": "Vendedor LevelUp",
+    "role": "vendedor"
+  },
+  {
+    "id": "3",
+    "email": "cliente@duocuc.cl",
+    "password": "cliente123",
+    "nombre": "Cliente General",
+    "role": "cliente"
+  }
+]

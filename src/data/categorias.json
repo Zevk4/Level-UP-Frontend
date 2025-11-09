@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Consolas",
+    "link": "/category?cat=Consolas",
+    "subcategories": [
+      { "name": "PlayStation", "link": "/category?cat=Consolas&sub=PlayStation" },
+      { "name": "Xbox Series", "link": "/category?cat=Consolas&sub=Xbox%20Series" },
+      { "name": "Nintendo Switch", "link": "/category?cat=Consolas&sub=Nintendo%20Switch" }
+    ]
+  },
+  {
+    "title": "Juegos",
+    "link": "/category?cat=Juegos",
+    "subcategories": [
+      { "name": "Juegos de Mesa", "link": "/category?cat=Juegos&sub=Juegos%20de%20Mesa" },
+      { "name": "Juegos de Consolas", "link": "/category?cat=Juegos&sub=Juegos%20de%20Consolas" }
+    ]
+  },
+  {
+    "title": "Periféricos",
+    "link": "/category?cat=Perifericos",
+    "subcategories": [
+      { "name": "Auriculares Gamer", "link": "/category?cat=Perifericos&sub=Auriculares%20Gamer" },
+      { "name": "Controles", "link": "/category?cat=Perifericos&sub=Controles" },
+      { "name": "Mouse Gamer", "link": "/category?cat=Perifericos&sub=Mouse%20Gamer" }
+    ]
+  },
+  {
+    "title": "Accesorios",
+    "link": "/category?cat=Accesorios",
+    "subcategories": [
+      { "name": "Soportes", "link": "/category?cat=Accesorios&sub=Soportes" },
+      { "name": "Mousepad", "link": "/category?cat=Accesorios&sub=Mousepad" }
+    ]
+  },
+  {
+    "title": "Computación",
+    "link": "/category?cat=Computacion",
+    "subcategories": [
+      { "name": "PC Escritorio", "link": "/category?cat=Computacion&sub=PC%20Escritorio" },
+      { "name": "Notebooks Gamers", "link": "/category?cat=Computacion&sub=Notebooks%20Gamers" },
+      { "name": "Laptops", "link": "/category?cat=Computacion&sub=Laptops" }
+    ]
+  },
+  {
+    "title": "Sillas Gamer",
+    "link": "/category?cat=Sillas%20Gamer",
+    "subcategories": [
+      { "name": "Secretlab", "link": "/category?cat=Sillas%20Gamer&sub=Secretlab" },
+      { "name": "DXRacer", "link": "/category?cat=Sillas%20Gamer&sub=DXRacer" }
+    ]
+  },
+  {
+    "title": "Poleras",
+    "link": "/category?cat=Poleras%20Personalizadas",
+    "subcategories": [
+      { "name": "Poleras Asus", "link": "/category?cat=Poleras%20Personalizadas&sub=Poleras%20Asus" },
+      { "name": "Poleras MSI", "link": "/category?cat=Poleras%20Personalizadas&sub=Poleras%20MSI" },
+      { "name": "Otras", "link": "/category?cat=Poleras%20Personalizadas&sub=Otras" }
+    ]
+  }
+]

@@ -1,0 +1,268 @@
+/*=====================================
+  1. Estilos Generales y Variables
+  (ESTO SE QUEDA)
+  =====================================*/
+:root {
+  /* Paleta de colores */
+  --color-principal: #1E90FF;
+  /* Azul Eléctrico */
+  --color-secundario: #39FF14;
+  /* Verde Neón */
+  --color-texto: #D3D3D3;
+  /* Gris claro para el texto */
+  --color-fondo: #000000;
+  /* Negro principal */
+  --color-fondo-oscuro: #2c2c2c;
+  /* Gris oscuro para la barra superior */
+  --color-fondo-claro: #1a1a1a;
+  /* Gris para tarjetas o elementos */
+  /* Variable 'borde' no definida, la quitaremos donde aparezca */
+}
+
+/* Reseteo y estilos básicos */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  line-height: 1.6;
+  overflow-x: hidden;
+  /* Quitamos el 'display: flex' de aquí, 
+       ya que lo maneja App.tsx con un div */
+  /* === ¡AÑADE ESTA LÍNEA! === */
+  /* Fuerza a que el scroll vertical esté siempre presente */
+  overflow-y: scroll;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--color-principal);
+}
+/* Contenedor principal para centrar el contenido y aplicar padding */
+.container-main {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 110px;
+}
+
+/*=====================================
+  3. Contenido Principal (Main)
+  =====================================*/
+
+.main {
+  padding-top: 0;
+}
+
+/* Sección de productos (Para CategoryPage.tsx - AÚN NO CREADO) */
+/* (Se queda aquí temporalmente) */
+#productos {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.catalogo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.product-card {
+  background-color: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+}
+
+.product-card img {
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-card h4 {
+  color: var(--color-principal);
+  margin: 15px 0 5px;
+}
+
+.product-card p {
+  color: var(--color-texto);
+}
+
+.product-card .precio {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--color-secundario);
+  margin: 10px 0;
+}
+
+.add-to-cart-btn {
+  background-color: var(--color-secundario);
+  color: var(--color-fondo);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: var(--color-principal);
+}
+
+/* Drawer (Carrito - AÚN NO CREADO) */
+/* (Se queda aquí temporalmente) */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  max-width: 90%;
+  height: 100vh;
+  background: var(--color-fondo-claro);
+  color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.drawer-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.drawer-footer {
+  border-top: 1px solid #444;
+  padding-top: 1rem;
+}
+
+.drawer-footer button {
+  width: 100%;
+  padding: 12px;
+  background: var(--color-secundario);
+  border: none;
+  border-radius: 8px;
+  color: var(--color-fondo);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.drawer-footer div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.drawer-footer .total {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.cart-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.cart-line img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.cart-line .info {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cart-line .info strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2rem;
+  height: calc(1.2rem * 2);
+  max-width: 180px;
+}
+
+.cart-line .muted {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.cart-line .acciones {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+
+/* Media Queries para estilos que QUEDARON aquí */
+@media (max-width: 768px) {
+
+  /* Estilos para el catálogo de productos (que aún no migramos) */
+  .catalogo {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-card {
+    width: 90%;
+  }
+}
+
+
+
+

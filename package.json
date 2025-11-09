@@ -11,10 +11,16 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "bootstrap": "^5.3.8",
+    "leaflet": "^1.9.4",
     "react": "^19.2.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.0",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.9.5",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
+    "uuid": "^13.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -40,5 +46,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jasmine": "^5.1.12",
+    "@types/leaflet": "^1.9.21",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/uuid": "^10.0.0",
+    "jasmine": "^5.12.0",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-jasmine": "^5.1.0",
+    "karma-sourcemap-loader": "^0.4.0",
+    "karma-typescript": "^5.5.4",
+    "karma-webpack": "^5.0.1"
   }
 }

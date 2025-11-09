@@ -1,0 +1,83 @@
+/*=====================================
+  Estilos Personalizados de ProductCard (FORZADO)
+=====================================*/
+
+/* 1. Forzamos el fondo oscuro, color de texto y borde */
+.card.product-card-custom {
+  background-color: var(--color-fondo-claro) !important; 
+  border: 1px solid #333 !important;                 
+  color: var(--color-texto) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.product-card-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 12px var(--color-principal);
+}
+
+/* 2. Forzamos el color del título del producto */
+.card.product-card-custom .card-title a {
+  color: var(--color-principal) !important; 
+  text-decoration: none;
+  font-weight: bold; /* Añadimos negrita */
+}
+
+.card.product-card-custom .card-title a:hover {
+  text-decoration: underline;
+}
+
+/* 3. Forzamos el color del precio */
+.card.product-card-custom .product-price {
+  color: var(--color-secundario) !important; /* Verde neón */
+}
+
+/* 4. Forzamos el color del texto de la descripción */
+.card.product-card-custom .card-text {
+  color: var(--color-texto) !important; /* Texto gris claro */
+}
+
+/* 5. Forzamos el color del botón (usando HEX) */
+.card.product-card-custom .btn-primary {
+  background-color: #1E90FF !important; /* Tu azul eléctrico */
+  border-color: #1E90FF !important;
+  font-weight: bold;
+}
+
+.card.product-card-custom .btn-primary:hover {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+/* ... (Deja todos tus estilos existentes .card.product-card-custom, .product-price, etc.) ... */
+
+/* =====================================
+   ESTILOS DE TRUNCADO DE TEXTO
+   ===================================== */
+
+/* 1. Clase para truncar el TÍTULO a 2 líneas */
+.product-title-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* --- CORRECCIÓN DE COMPATIBILIDAD --- */
+  -webkit-line-clamp: 2; /* Para navegadores antiguos */
+  line-clamp: 2;         /* El estándar moderno */
+  
+  min-height: 2.4em;
+}
+
+/* 2. Clase para truncar la DESCRIPCIÓN a 3 líneas */
+.product-description-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* --- CORRECCIÓN DE COMPATIBILIDAD --- */
+  -webkit-line-clamp: 3; /* Para navegadores antiguos */
+  line-clamp: 3;         /* El estándar moderno */
+  
+  min-height: 3.6em; 
+}
