@@ -77,79 +77,64 @@
 }
 
 
+
+
 /* =====================================
    ESTILOS RESPONSIVOS DEL HEADER (MÓVIL)
-   ¡SECCIÓN CORREGIDA!
    ===================================== */
 @media (max-width: 991.98px) {
   
-  .custom-navbar .navbar-toggler {
-    border: none !important; 
-    box-shadow: none !important; 
+  /* 1. Estilos de los botones-ícono (Búsqueda, User, Cart, Menú) */
+  .icon-button {
+    color: var(--color-texto) !important;
+    border: none !important;
+    background: none !important;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: none !important;
   }
 
+  /* 2. Arregla el botón hamburguesa (sin borde) */
+  .custom-navbar .navbar-toggler {
+    border: none !important;
+    box-shadow: none !important;
+  }
   .custom-navbar .navbar-toggler:focus {
     box-shadow: none !important;
   }
   .custom-navbar .navbar-toggler-icon {
+    /* (El SVG del icono) */
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
   }
 
-  .icon-button {
-    color: var(--color-texto) !important;
-    border: none !important;
-    background: none !important; /* ¡Forzamos el fondo transparente! */
-    padding: 5px;
-    border-radius: 50%;
-    box-shadow: none !important; 
-  }
-
+  /* --- ¡AÑADIDO! --- */
+  /* 3. Regla clave para "empujar" el contenido (push-down) */
+  /*
+    Esto anula el 'position: absolute' de Bootstrap
+    y fuerza al panel a comportarse como un bloque normal.
+  */
   .custom-navbar .navbar-collapse {
     width: 100%;
-    position: relative !important;
+    position: relative !important; /* ¡La clave! */
     height: auto !important;
     overflow: hidden !important;
     flex-basis: auto !important;
-    
   }
 
-  /* El panel de búsqueda (el <div> con el ID) */
+
+  /* 4. Animaciones para los paneles desplegables */
   #mobile-search-nav {
     transition: height 0.35s ease, opacity 0.35s ease-out;
     opacity: 0;
   }
-  
-  /* Cuando está abierto (Bootstrap añade la clase '.show') */
   #mobile-search-nav.show {
-    /* 3. Estado final (abierto): totalmente visible */
     opacity: 1;
   }
-
-  /*Animación para MENÚ (Categorías) --- */
-  /*
-    Bootstrap usa 'navbar-collapse' para la transición de altura.
-    Nosotros le añadimos la transición de opacidad.
-  */
-  .navbar-collapse#mobile-menu-nav {
-    transition: height 0.35s ease, opacity 0.35s ease-out;
-    opacity: 0; /* Cerrado es transparente */
-    /* Aseguramos que sea 'hidden' cuando no tiene 'show' 
-       para que 'opacity: 0' funcione
-    */
-    visibility: hidden; 
-  }
   
-  .navbar-collapse#mobile-menu-nav.show {
-    opacity: 1; /* Abierto es visible */
-    visibility: visible;
-  }
-  /* 4. AÑADIMOS la animación de "slide-in" AL CONTENIDO
-   del panel de menú cuando se muestra */
   .navbar-collapse#mobile-menu-nav.show .mt-3 {
-    animation: slideInFromLeft 0.1s ease-out;
+    animation: slideInFromLeft 0.4s ease-out;
   }
 
-    /* 5. AÑADIMOS la definición de la animación */
   @keyframes slideInFromLeft {
     from {
       transform: translateX(-30px);
@@ -160,5 +145,4 @@
       opacity: 1;
     }
   }
-
 }

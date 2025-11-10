@@ -2,9 +2,10 @@ import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Product } from '../../types';
-
-// Importar el CSS
 import './ProductCard.css';
+
+// 1. Importar el hook 'useCart'
+import { useCart } from '../../context/CartContext';
 
 // Definición del tipo
 interface ProductCardProps {
@@ -20,8 +21,10 @@ const formatPrice = (price: number) => {
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { codigo, imagen, nombre, precio, descripcion } = product;
+  // 2. Obtener la función 'addToCart' del contexto
+  const { addToCart } = useCart();
 
+  const { codigo, imagen, nombre, precio, descripcion } = product;
   const imageUrl = imagen;
 
   return (
@@ -42,14 +45,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </Link>
 
       <Card.Body className="d-flex flex-column">
-        {/* 1. CLASE AÑADIDA AQUÍ */}
         <Card.Title as="h5" className="fs-6 product-title-truncate">
           <Link to={`/product/${codigo}`} style={{ textDecoration: 'none' }}>
             {nombre}
           </Link>
         </Card.Title>
 
-        {/* 2. CLASE AÑADIDA AQUÍ Y LÓGICA DE SUBSTRING ELIMINADA */}
         <Card.Text className="small flex-grow-1 product-description-truncate">
           {descripcion}
         </Card.Text>
@@ -58,7 +59,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Card.Text className="h4 fw-bold product-price my-2">
             {formatPrice(precio)}
           </Card.Text>
-          <Button variant="primary" className="w-100">
+
+          {/* 3. Añadir el 'onClick' al botón */}
+          <Button
+            variant="primary"
+            className="w-100"
+            onClick={() => addToCart(product)} // ¡AQUÍ ESTÁ LA MAGIA!
+          >
             Agregar al Carrito
           </Button>
         </div>

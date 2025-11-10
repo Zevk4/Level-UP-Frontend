@@ -8,11 +8,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'leaflet/dist/leaflet.css';
 
 // 2. Importa tus estilos globales personalizados (si los tienes)
-import './index.css';
+import './styles/index.css';
+import './styles/auth.css';
+import './pages/LoginPage.css';
 
-import './style.css';
 // 3. Importa el componente App principal
 import App from './App';
+import { CartProvider } from './context/CartContext';
 
 // 4. Código estándar de React para iniciar la app
 const root = ReactDOM.createRoot(
@@ -21,6 +23,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+    <CartProvider>
+      <App />
+    </CartProvider>
   </React.StrictMode>
 );

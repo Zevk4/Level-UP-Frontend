@@ -2,11 +2,13 @@ import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Row, Col, Image, Button } from 'react-bootstrap';
 
-// Importar datos y tipos
 import productsData from '../data/productos.json';
 import { Product } from '../types';
 
-// Función helper para formatear el precio (la misma de ProductCard)
+// 1. Importar el hook 'useCart'
+import { useCart } from '../context/CartContext';
+
+// Función helper para formatear el precio
 const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CL', {
         style: 'currency',
@@ -15,16 +17,18 @@ const formatPrice = (price: number) => {
 };
 
 const ProductDetailPage: React.FC = () => {
-    // 1. Leer el 'codigo' de la URL (ej. "AC001")
     const { codigo } = useParams<{ codigo: string }>();
 
-    // 2. Encontrar el producto que coincide con el código
+    // 2. Obtener la función 'addToCart' del contexto
+    const { addToCart } = useCart();
+
+    // Encontrar el producto (sin cambios)
     const product: Product | undefined = useMemo(() => {
         const allProducts = productsData as Product[];
         return allProducts.find(p => p.codigo === codigo);
-    }, [codigo]); // Se recalcula solo si el 'codigo' de la URL cambia
+    }, [codigo]);
 
-    // 3. Manejar el caso de que el producto no se encuentre
+    // Manejar el caso de que el producto no se encuentre (sin cambios)
     if (!product) {
         return (
             <div>
@@ -34,16 +38,16 @@ const ProductDetailPage: React.FC = () => {
         );
     }
 
-    // 4. Renderizar la página de detalle
+    // Renderizar la página de detalle
     return (
-        <Row className="g-5"> {/* 'g-5' añade un buen espacio entre columnas */}
+        <Row className="g-5">
 
             {/* Columna de la Imagen */}
             <Col md={6}>
                 <Image
                     src={product.imagen}
                     alt={product.nombre}
-                    fluid // Hace la imagen responsiva
+                    fluid
                     style={{
                         backgroundColor: '#FFF',
                         borderRadius: '8px',
@@ -54,10 +58,8 @@ const ProductDetailPage: React.FC = () => {
 
             {/* Columna de la Información */}
             <Col md={6}>
-                {/* Título */}
                 <h1 className="display-5 fw-bold">{product.nombre}</h1>
 
-                {/* Precio (usando tu color verde neón) */}
                 <p
                     className="h2 my-3"
                     style={{ color: 'var(--color-secundario)', fontWeight: 'bold' }}
@@ -65,7 +67,7 @@ const ProductDetailPage: React.FC = () => {
                     {formatPrice(product.precio)}
                 </p>
 
-                {/* Botón de Agregar */}
+                {/* 3. AÑADIR 'onClick' AL BOTÓN */}
                 <Button
                     variant="primary"
                     size="lg"
@@ -75,11 +77,11 @@ const ProductDetailPage: React.FC = () => {
                         borderColor: 'var(--color-principal)',
                         fontWeight: 'bold'
                     }}
+                    onClick={() => addToCart(product)} // ¡AQUÍ ESTÁ LA MAGIA!
                 >
                     Agregar al Carrito
                 </Button>
 
-                {/* Descripción */}
                 <h3 className="mt-4">Descripción</h3>
                 <p style={{ color: 'var(--color-texto)', fontSize: '1.1rem' }}>
                     {product.descripcion}

@@ -1,0 +1,21 @@
+.mobileToggleText {
+  color: var(--color-texto);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.3px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.link {
+  color: var(--color-secundario);
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: #49f072;
+  text-decoration: underline;
+}

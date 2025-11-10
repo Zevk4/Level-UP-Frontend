@@ -1,0 +1,33 @@
+.button {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 45px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s;
+  border: none;
+}
+
+.primary {
+  background-color: var(--color-secundario);
+  color: var(--color-fondo);
+}
+
+.primary:hover {
+  background-color: #49f072;
+  box-shadow: 0 0 10px var(--color-principal);
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--color-principal);
+  border: 1px solid var(--color-principal);
+}
+
+.secondary:hover {
+  background-color: var(--color-principal);
+  color: #ffffff;
+}

@@ -1,23 +1,23 @@
 [
   {
-    "id": "1",
+    "id": 1,
+    "nombre": "Admin LevelUp",
     "email": "admin@levelup.cl",
     "password": "admin123",
-    "nombre": "Admin LevelUp",
     "role": "admin"
   },
   {
-    "id": "2",
+    "id": 2,
+    "nombre": "Vendedor LevelUp",
     "email": "vendedor@levelup.cl",
     "password": "vende123",
-    "nombre": "Vendedor LevelUp",
     "role": "vendedor"
   },
   {
-    "id": "3",
+    "id": 3,
+    "nombre": "Cliente General",
     "email": "cliente@duocuc.cl",
     "password": "cliente123",
-    "nombre": "Cliente General",
     "role": "cliente"
   }
 ]

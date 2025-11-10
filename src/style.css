@@ -1,7 +1,6 @@
 /*=====================================
-  1. Estilos Generales y Variables
-  (ESTO SE QUEDA)
-  =====================================*/
+  1. Estilos Generales y Variables
+  =====================================*/
 :root {
   /* Paleta de colores */
   --color-principal: #1E90FF;
@@ -16,7 +15,6 @@
   /* Gris oscuro para la barra superior */
   --color-fondo-claro: #1a1a1a;
   /* Gris para tarjetas o elementos */
-  /* Variable 'borde' no definida, la quitaremos donde aparezca */
 }
 
 /* Reseteo y estilos básicos */
@@ -33,9 +31,6 @@ body {
   margin: 0;
   line-height: 1.6;
   overflow-x: hidden;
-  /* Quitamos el 'display: flex' de aquí, 
-       ya que lo maneja App.tsx con un div */
-  /* === ¡AÑADE ESTA LÍNEA! === */
   /* Fuerza a que el scroll vertical esté siempre presente */
   overflow-y: scroll;
 }
@@ -47,6 +42,7 @@ h4 {
   font-family: 'Orbitron', sans-serif;
   color: var(--color-principal);
 }
+
 /* Contenedor principal para centrar el contenido y aplicar padding */
 .container-main {
   max-width: 1300px;
@@ -54,16 +50,23 @@ h4 {
   padding: 0 110px;
 }
 
+/* --- ESTILO PARA COMPENSAR EL HEADER FIJO --- */
+/* Aproximadamente 100px para la barra de descuento + la barra principal */
+.main-content-padding {
+  padding-top: 70px;
+}
+
+
 /*=====================================
-  3. Contenido Principal (Main)
-  =====================================*/
+  3. Contenido Principal (Main)
+  (Contiene estilos NO migrados)
+  =====================================*/
 
 .main {
   padding-top: 0;
 }
 
-/* Sección de productos (Para CategoryPage.tsx - AÚN NO CREADO) */
-/* (Se queda aquí temporalmente) */
+/* Sección de productos (Para CategoryPage.tsx - AÚN NO MIGRADO) */
 #productos {
   padding: 50px 20px;
   text-align: center;
@@ -131,8 +134,7 @@ h4 {
   background-color: var(--color-principal);
 }
 
-/* Drawer (Carrito - AÚN NO CREADO) */
-/* (Se queda aquí temporalmente) */
+/* Drawer (Carrito - AÚN NO MIGRADO) */
 .drawer {
   position: fixed;
   top: 0;
@@ -262,7 +264,3 @@ h4 {
     width: 90%;
   }
 }
-
-
-
-
