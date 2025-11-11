@@ -3,7 +3,7 @@ import { Carousel, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 // 1. Importar los datos y los componentes
-import productsData from '../../data/productos.json'; // Importa tus productos
+import { useProducts } from '../../context/ProductContext'; // Usar el contexto
 import ProductCard from '../product/ProductCard';
 import { Product } from '../../types'; // Importa el tipo
 
@@ -20,8 +20,8 @@ const chunkArray = (array: any[], size: number) => {
 };
 
 const MostViewedProducts: React.FC = () => {
-  // 3. Decirle a TypeScript que 'productsData' es un Array de 'Product'
-  const products: Product[] = productsData as Product[];
+  // 3. Obtener productos desde el contexto
+  const { products } = useProducts();
   // Agrupamos el JSON en arrays de 4 productos cada uno
   // [[p1, p2, p3, p4], [p5, p6, p7, p8], [p9, p10]]
   const productSlides = chunkArray(products, 4);

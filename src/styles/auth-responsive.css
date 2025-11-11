@@ -1,0 +1,150 @@
+/* =======================================
+   RESPONSIVE DESIGN PARA LOGIN FORM
+======================================= */
+
+/* Mantener el formulario limpio y horizontal en todas las pantallas */
+.auth-container form {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+}
+
+/* Inputs siempre limpios y bien espaciados */
+.auth-container input {
+    width: 100% !important;
+    max-width: 300px !important;
+    margin: 0 !important;
+    padding: 12px 15px !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    background-color: var(--color-fondo-oscuro) !important;
+    border: 1px solid #444 !important;
+    color: var(--color-texto) !important;
+    outline: none !important;
+    transition: border-color 0.3s, box-shadow 0.3s !important;
+}
+
+.auth-container input::placeholder {
+    color: #888 !important;
+}
+
+.auth-container input:focus {
+    border-color: var(--color-principal) !important;
+    box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.2) !important;
+}
+
+/* Botón siempre centrado y limpio */
+.auth-container button {
+    width: auto !important;
+    min-width: 120px !important;
+    padding: 12px 30px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    margin-top: 10px !important;
+    background-color: var(--color-secundario) !important;
+    color: var(--color-fondo) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s, box-shadow 0.3s !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.auth-container button:hover {
+    background-color: #49f072 !important;
+    box-shadow: 0 0 10px var(--color-principal) !important;
+}
+
+/* Mensaje de error siempre visible y centrado */
+.form-message {
+    width: 100% !important;
+    max-width: 300px !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 8px 0 !important;
+    font-size: 14px !important;
+    min-height: 20px !important;
+}
+
+/* En móviles, mantener el diseño simple y limpio */
+@media (max-width: 767px) {
+    .auth-container {
+        max-width: 90% !important;
+        min-height: auto !important;
+    }
+
+    .form-container {
+        padding: 30px 20px !important;
+    }
+
+    .auth-container form {
+        gap: 12px !important;
+        max-width: 280px !important;
+    }
+
+    .auth-container input {
+        max-width: 280px !important;
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
+
+    .auth-container button {
+        padding: 10px 25px !important;
+        font-size: 13px !important;
+    }
+
+    .form-message {
+        max-width: 280px !important;
+        font-size: 13px !important;
+    }
+
+    /* Ocultar paneles complejos en móvil para mantener limpieza */
+    .alternar-container {
+        display: none !important;
+    }
+
+    .mobile-toggle-text {
+        display: block !important;
+        text-align: center !important;
+        margin-top: 15px !important;
+    }
+}
+
+/* En pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .auth-container {
+        max-width: 95% !important;
+        margin: 10px !important;
+    }
+
+    .form-container {
+        padding: 25px 15px !important;
+    }
+
+    .auth-container form {
+        gap: 10px !important;
+        max-width: 260px !important;
+    }
+
+    .auth-container input {
+        max-width: 260px !important;
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+    }
+
+    .auth-container button {
+        padding: 8px 20px !important;
+        font-size: 12px !important;
+    }
+
+    .form-message {
+        max-width: 260px !important;
+        font-size: 12px !important;
+    }
+}

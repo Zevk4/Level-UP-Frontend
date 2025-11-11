@@ -40,7 +40,7 @@ export default function RegisterForm() {
         onChange={handleChange}
         error={errors.nombre}
       />
-      
+
       <Input
         name="email"
         type="email"
@@ -49,7 +49,7 @@ export default function RegisterForm() {
         onChange={handleChange}
         error={errors.email}
       />
-      
+
       <Input
         name="password"
         type="password"

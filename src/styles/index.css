@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  background-color: #000000;
+  background-color: #000000 !important;
   font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   color: #D3D3D3;
   -webkit-font-smoothing: antialiased;
@@ -105,6 +105,186 @@ p, span, a, button, input {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* =======================================
+   RESPONSIVE DESIGN
+======================================= */
+
+/* Media Queries para diferentes tamaños de pantalla */
+
+/* Tablets y móviles grandes (768px y menos) */
+@media (max-width: 768px) {
+  /* Ajustes generales */
+  body {
+    font-size: 14px;
+  }
+
+  /* Contenedor principal */
+  .container-main {
+    padding: 0 20px;
+  }
+
+  /* Header */
+  .sticky-header-bar {
+    padding: 0 10px;
+  }
+
+  /* Footer */
+  .footer-content-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* Mapa en footer */
+  #footerMap {
+    height: 250px;
+  }
+
+  /* Íconos sociales */
+  .social-links a svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Product cards */
+  .product-card-custom {
+    margin-bottom: 15px;
+  }
+
+  /* Cart drawer */
+  .drawer {
+    width: 320px;
+  }
+
+  .drawer.is-open {
+    transform: translateX(-320px);
+  }
+
+  /* Login modal */
+  .login-modal-content {
+    width: 90%;
+    max-width: 90%;
+  }
+}
+
+/* Móviles pequeños (576px y menos) */
+@media (max-width: 576px) {
+  /* Ajustes más agresivos para móviles pequeños */
+  body {
+    font-size: 13px;
+  }
+
+  /* Contenedor principal */
+  .container-main {
+    padding: 0 15px;
+  }
+
+  /* Header */
+  .sticky-header-bar {
+    padding: 0 5px;
+  }
+
+  /* Footer */
+  .footer-content-wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* Mapa en footer */
+  #footerMap {
+    height: 200px;
+  }
+
+  /* Íconos sociales */
+  .social-links a svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  /* Product cards */
+  .product-card-custom .card-title {
+    font-size: 0.9rem;
+  }
+
+  .product-card-custom .product-price {
+    font-size: 1.2rem;
+  }
+
+  /* Cart drawer */
+  .drawer {
+    width: 280px;
+  }
+
+  .drawer.is-open {
+    transform: translateX(-280px);
+  }
+
+  /* Login modal */
+  .login-modal-content {
+    width: 95%;
+    max-width: 95%;
+  }
+
+  /* Botones */
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+
+/* Pantallas muy pequeñas (480px y menos) */
+@media (max-width: 480px) {
+  /* Ajustes extremos para móviles muy pequeños */
+  body {
+    font-size: 12px;
+  }
+
+  /* Contenedor principal */
+  .container-main {
+    padding: 0 10px;
+  }
+
+  /* Footer */
+  .footer-content-wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* Mapa en footer */
+  #footerMap {
+    height: 180px;
+  }
+
+  /* Íconos sociales */
+  .social-links a svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Product cards */
+  .product-card-custom .card-title {
+    font-size: 0.8rem;
+  }
+
+  .product-card-custom .product-price {
+    font-size: 1.1rem;
+  }
+
+  /* Cart drawer */
+  .drawer {
+    width: 260px;
+  }
+
+  .drawer.is-open {
+    transform: translateX(-260px);
+  }
+
+  /* Login modal */
+  .login-modal-content {
+    width: 98%;
+    max-width: 98%;
+  }
 }
 
 /* =======================================

@@ -3,18 +3,20 @@ import { useSearchParams } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 
 // Importar los datos y componentes
-import productsData from '../data/productos.json';
+import { useProducts } from '../context/ProductContext';
 import { Product } from '../types';
 import ProductCard from '../components/product/ProductCard';
 
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  
+
   // 1. Lee el parámetro "q" de la URL (ej. /search?q=catan)
   const query = searchParams.get('q') || '';
 
+  // Acceder a los productos desde el contexto
+  const { products } = useProducts();
+
   const filteredProducts: Product[] = useMemo(() => {
-    const allProducts = productsData as Product[];
     const queryLower = query.toLowerCase();
 
     if (!query) {
@@ -22,13 +24,13 @@ const SearchPage: React.FC = () => {
     }
 
     // 2. Filtra por nombre O descripción
-    return allProducts.filter(product => {
+    return products.filter(product => {
       const nameMatch = product.nombre.toLowerCase().includes(queryLower);
       const descMatch = product.descripcion.toLowerCase().includes(queryLower);
       return nameMatch || descMatch;
     });
 
-  }, [query]); // Se recalcula solo si la 'query' cambia
+  }, [query, products]); // Se recalcula solo si la 'query' o 'products' cambian
 
   return (
     <div>

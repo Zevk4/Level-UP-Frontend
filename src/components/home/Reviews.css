@@ -21,7 +21,7 @@
     overflow-x: auto; /* Permite el scroll horizontal */
     scroll-snap-type: x mandatory;
     padding: 1% 55px; /* Damos el padding original aquí */
-    
+
     /* ¡Magia! Oculta la barra de scroll fea */
     -ms-overflow-style: none;  /* IE y Edge */
     scrollbar-width: none;  /* Firefox */
@@ -29,6 +29,70 @@
 /* Oculta la barra de scroll fea en Chrome, Safari y Opera */
 .reviews-slider::-webkit-scrollbar {
     display: none;
+}
+
+/* Responsive para Reviews */
+@media (max-width: 768px) {
+  .reviews {
+    padding: 1% 0;
+    padding-bottom: 50px;
+  }
+
+  .reviews h3 {
+    padding-left: 20px;
+    font-size: 1.3rem;
+  }
+
+  .reviews-slider {
+    padding: 1% 20px;
+    gap: 15px;
+  }
+
+  .review-carousel-item-wrapper {
+    padding: 8px 3px;
+  }
+}
+
+@media (max-width: 576px) {
+  .reviews {
+    padding: 1% 0;
+    padding-bottom: 45px;
+  }
+
+  .reviews h3 {
+    padding-left: 15px;
+    font-size: 1.2rem;
+  }
+
+  .reviews-slider {
+    padding: 1% 15px;
+    gap: 12px;
+  }
+
+  .review-carousel-item-wrapper {
+    padding: 6px 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviews {
+    padding: 1% 0;
+    padding-bottom: 40px;
+  }
+
+  .reviews h3 {
+    padding-left: 10px;
+    font-size: 1.1rem;
+  }
+
+  .reviews-slider {
+    padding: 1% 10px;
+    gap: 10px;
+  }
+
+  .review-carousel-item-wrapper {
+    padding: 4px 1px;
+  }
 }
 
 /* Tarjeta (estilos compartidos) */

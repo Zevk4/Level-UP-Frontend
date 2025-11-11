@@ -17,6 +17,8 @@ interface HeaderMobileProps {
     searchTerm: string;
     results: Product[];
     cartItemCount: number;
+    user: any;
+    logout: () => void;
     isMobileMenuOpen: boolean;
     isSearchOpen: boolean;
     onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -27,12 +29,16 @@ interface HeaderMobileProps {
     onToggleMenu: (isExpanded: boolean) => void;
     onToggleSearch: () => void;
     onCloseMenus: () => void;
+    onOpenLoginModal: () => void;
+    onLinkClick: () => void;
 }
 
 const HeaderMobile: React.FC<HeaderMobileProps> = ({
     searchTerm,
     results,
     cartItemCount,
+    user,
+    logout,
     isMobileMenuOpen,
     isSearchOpen,
     onSearchChange,
@@ -42,7 +48,9 @@ const HeaderMobile: React.FC<HeaderMobileProps> = ({
     onOpenCart,
     onToggleMenu,
     onToggleSearch,
-    onCloseMenus
+    onCloseMenus,
+    onOpenLoginModal,
+    onLinkClick
 }) => {
     return (
         <Navbar
@@ -78,9 +86,19 @@ const HeaderMobile: React.FC<HeaderMobileProps> = ({
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                             </svg>
                         </button>
-                        <Nav.Link as={Link} to="/auth" className="icon-button me-2" onClick={onCloseMenus}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
-                        </Nav.Link>
+                        {user ? (
+                            <div className="d-flex align-items-center me-2 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person me-2" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
+                                <div>
+                                    <p className="m-0 small">Hola, {user.nombre}</p>
+                                    <Link to="/" onClick={logout} className="small text-danger" style={{textDecoration: 'none'}}><b>Cerrar Sesión</b></Link>
+                                </div>
+                            </div>
+                        ) : (
+                            <Nav.Link onClick={() => { onOpenLoginModal(); onCloseMenus(); }} className="icon-button me-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
+                            </Nav.Link>
+                        )}
                         <Nav.Link
                             onClick={() => {
                                 onOpenCart();

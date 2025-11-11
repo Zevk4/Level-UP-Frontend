@@ -60,11 +60,11 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  
+
   /* --- CORRECCIÓN DE COMPATIBILIDAD --- */
   -webkit-line-clamp: 2; /* Para navegadores antiguos */
   line-clamp: 2;         /* El estándar moderno */
-  
+
   min-height: 2.4em;
 }
 
@@ -78,6 +78,94 @@
   /* --- CORRECCIÓN DE COMPATIBILIDAD --- */
   -webkit-line-clamp: 3; /* Para navegadores antiguos */
   line-clamp: 3;         /* El estándar moderno */
-  
-  min-height: 3.6em; 
+
+  min-height: 3.6em;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN PARA PRODUCT CARD
+======================================= */
+
+/* Tablets y móviles grandes (768px y menos) */
+@media (max-width: 768px) {
+  .card.product-card-custom {
+    margin-bottom: 12px;
+  }
+
+  .card.product-card-custom .card-img-top {
+    height: 180px;
+  }
+
+  .card.product-card-custom .card-title {
+    font-size: 0.95rem;
+  }
+
+  .card.product-card-custom .product-price {
+    font-size: 1.3rem;
+  }
+
+  .card.product-card-custom .card-text {
+    font-size: 0.85rem;
+  }
+
+  .card.product-card-custom .btn {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+}
+
+/* Móviles pequeños (576px y menos) */
+@media (max-width: 576px) {
+  .card.product-card-custom {
+    margin-bottom: 10px;
+  }
+
+  .card.product-card-custom .card-img-top {
+    height: 160px;
+  }
+
+  .card.product-card-custom .card-title {
+    font-size: 0.9rem;
+  }
+
+  .card.product-card-custom .product-price {
+    font-size: 1.2rem;
+  }
+
+  .card.product-card-custom .card-text {
+    font-size: 0.8rem;
+  }
+
+  .card.product-card-custom .btn {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}
+
+/* Pantallas muy pequeñas (480px y menos) */
+@media (max-width: 480px) {
+  .card.product-card-custom {
+    margin-bottom: 8px;
+  }
+
+  .card.product-card-custom .card-img-top {
+    height: 140px;
+  }
+
+  .card.product-card-custom .card-title {
+    font-size: 0.85rem;
+  }
+
+  .card.product-card-custom .product-price {
+    font-size: 1.1rem;
+  }
+
+  .card.product-card-custom .card-text {
+    font-size: 0.75rem;
+  }
+
+  .card.product-card-custom .btn {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
 }

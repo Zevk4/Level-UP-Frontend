@@ -4,7 +4,7 @@ import { Navbar, Nav, Container, Form, InputGroup, ListGroup } from 'react-boots
 import { Product } from '../../../types'; // Ajusta la ruta si es necesario
 import MegaMenu from './MegaMenu';
 
-// Función de formato de precio (la movemos aquí)
+// Función de formato de precio
 const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CL', {
         style: 'currency',
@@ -12,28 +12,34 @@ const formatPrice = (price: number) => {
     }).format(price);
 };
 
-// 1. Definimos todas las props que este componente "tonto" necesita
 interface HeaderDesktopProps {
     searchTerm: string;
     results: Product[];
     cartItemCount: number;
+    user: any;
+    logout: () => void;
     onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSearchBlur: () => void;
     onSearchSubmit: (e: React.FormEvent) => void;
     onResultClick: () => void;
     onOpenCart: () => void;
+    onOpenLoginModal: () => void;
 }
 
 const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
     searchTerm,
     results,
     cartItemCount,
+    user,
+    logout,
     onSearchChange,
     onSearchBlur,
     onSearchSubmit,
     onResultClick,
-    onOpenCart
+    onOpenCart,
+    onOpenLoginModal
 }) => {
+
     return (
         <Navbar variant="dark" className="py-3 custom-navbar d-none d-lg-block">
             <Container fluid="xl" className="d-flex justify-content-between align-items-center">
@@ -76,10 +82,20 @@ const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
 
                 {/* Acciones Desktop */}
                 <Nav className="d-flex align-items-center flex-row">
-                    <Nav.Link as={Link} to="/auth" className="d-flex align-items-center me-3 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person me-2" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
-                        <div><p className="m-0 small">Hola!</p><p className="m-0 small"><b>Inicia sesión</b></p></div>
-                    </Nav.Link>
+                    {user ? (
+                        <Nav className="d-flex align-items-center me-3 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person me-2" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
+                            <div>
+                                <p className="m-0 small">Hola, {user.nombre}</p>
+                                <Link to="/" onClick={logout} className="small text-danger" style={{textDecoration: 'none'}}><b>Cerrar Sesión</b></Link>
+                            </div>
+                        </Nav>
+                    ) : (
+                        <Nav.Link onClick={onOpenLoginModal} className="d-flex align-items-center me-3 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
+                            <div><p className="m-0 small">Hola!</p><p className="m-0 small"><b>Inicia sesión</b></p></div>
+                        </Nav.Link>
+                    )}
                     <div className="vr mx-3 d-none d-lg-block "></div>
                     <Nav.Link onClick={onOpenCart} className="position-relative text-white" style={{ cursor: 'pointer' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-cart" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" /></svg>
@@ -89,6 +105,13 @@ const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
                             </span>
                         )}
                     </Nav.Link>
+
+                    {/* Botón para Admin */}
+                    {user && user.role === 'admin' && (
+                        <Nav.Link as={Link} to="/admin" className="text-white ms-3">
+                            <b>Panel de Admin</b>
+                        </Nav.Link>
+                    )}
                 </Nav>
             </Container>
         </Navbar>

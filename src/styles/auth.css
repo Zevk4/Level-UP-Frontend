@@ -32,6 +32,18 @@ CSS LOGIN CON PALETA DE COLORES UNIFICADA
     overflow: hidden;
 }
 
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    min-height: 480px;
+    background-color: var(--color-fondo-claro);
+    border: 1px solid var(--color-fondo-oscuro);
+    border-radius: 20px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
 /* --- Tipografía --- */
 h1 {
     color: #ffffff;
@@ -54,6 +66,22 @@ p {
     margin: 20px 0;
 }
 
+.mobile-toggle-text a {
+    color: var(--color-secundario);
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+form a.forgot {
+    display: block;
+    color: var(--color-texto);
+    font-size: 13px;
+    text-decoration: none;
+    margin: 15px 0 10px;
+    text-align: center;
+}
+
 /* --- Formularios --- */
 .form-container {
     width: 100%;
@@ -71,6 +99,64 @@ p {
     justify-content: center;
     flex-direction: column;
     height: 100%;
+}
+
+.auth-container input {
+    background-color: var(--color-fondo-oscuro);
+    border: 1px solid #444;
+    color: var(--color-texto);
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.auth-container input::placeholder {
+    color: #888;
+}
+
+.form-message {
+    color: var(--color-error);
+    font-size: 14px;
+    text-align: center;
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+.form-message.success {
+    color: var(--color-secundario);
+}
+
+/* --- Botones --- */
+.auth-container button {
+    background-color: var(--color-secundario);
+    color: var(--color-fondo);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 45px;
+    border: none;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.auth-container button:hover {
+    background-color: #49f072;
+    box-shadow: 0 0 10px var(--color-principal);
+}
+
+/* --- Accesibilidad --- */
+.auth-container input:focus-visible,
+.auth-container button:focus-visible,
+.mobile-toggle-text a:focus-visible {
+    outline: 2px solid var(--color-principal);
+    outline-offset: 2px;
 }
 
 /* --- Paneles --- */
@@ -201,6 +287,18 @@ p {
 
     .auth-container.active .alternar-derecha {
         transform: translateX(20%);
+    }
+
+    button.hidden {
+        background-color: transparent;
+        border: 1px solid var(--color-principal);
+        color: var(--color-principal);
+        cursor: pointer;
+    }
+
+    button.hidden:hover {
+        background-color: var(--color-principal);
+        color: #ffffff;
     }
 
     @keyframes move {

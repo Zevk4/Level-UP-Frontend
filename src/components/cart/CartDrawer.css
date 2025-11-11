@@ -90,6 +90,17 @@
   font-size: 1.2rem;
 }
 
+.drawer-footer .discount {
+  color: #ffcc00; /* Color amarillo para destacar el descuento */
+  font-size: 0.9rem;
+}
+
+.drawer-footer .total-discounted {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #00ff00; /* Verde para el total con descuento */
+}
+
 /* Estilos para cada item en el carrito */
 .cart-line {
   display: flex;

@@ -2,13 +2,13 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 // Importar los datos y componentes
-import productsData from '../data/productos.json';
+import { useProducts } from '../context/ProductContext';
 import { Product } from '../types';
 import ProductCard from '../components/product/ProductCard';
 
 const AllProductsPage: React.FC = () => {
-  // 1. Simplemente cargamos todos los productos
-  const allProducts: Product[] = productsData as Product[];
+  // 1. Usar el contexto para obtener todos los productos (incluyendo los agregados dinámicamente)
+  const { products } = useProducts();
 
   return (
     <div>
@@ -16,7 +16,7 @@ const AllProductsPage: React.FC = () => {
 
       {/* 2. Mostrar todos los productos en una grilla */}
       <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-        {allProducts.map((product) => (
+        {products.map((product) => (
           <Col key={product.codigo}>
             <ProductCard product={product} />
           </Col>

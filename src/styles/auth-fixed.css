@@ -1,0 +1,69 @@
+/* =======================================
+   AUTH FORM FIXES - INPUTS ABOVE TITLES
+======================================= */
+
+/* Form container with proper spacing */
+.auth-container form {
+    background-color: var(--color-fondo-claro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    gap: 15px;
+    padding: 20px;
+}
+
+/* Title and subtitle positioning */
+.auth-container h1 {
+    margin: 10px 0 5px 0;
+    order: 2;
+}
+
+.auth-container span {
+    margin: 0 0 10px 0;
+    order: 3;
+}
+
+/* Input positioning */
+.auth-container input {
+    order: 1;
+}
+
+/* Button positioning */
+.auth-container button {
+    order: 4;
+    margin-top: 10px;
+}
+
+/* Error message positioning */
+.form-message {
+    order: 5;
+    margin: 10px 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+    .auth-container form {
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .auth-container h1 {
+        font-size: 24px;
+        margin: 8px 0 3px 0;
+    }
+
+    .auth-container span {
+        font-size: 11px;
+        margin: 0 0 8px 0;
+    }
+
+    .auth-container input {
+        margin: 0;
+    }
+
+    .auth-container button {
+        margin-top: 8px;
+    }
+}

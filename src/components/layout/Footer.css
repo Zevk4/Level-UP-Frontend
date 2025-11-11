@@ -63,11 +63,109 @@ footer h3 {
   /* Aplicamos el padding horizontal de 55px */
   padding-left: 55px;
   padding-right: 55px;
-  
-  /* Mantenemos el centrado y ancho máximo 
+
+  /* Mantenemos el centrado y ancho máximo
      (tomado de tu style.css original) */
   width: 100%;
   max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* =======================================
+   RESPONSIVE DESIGN PARA FOOTER
+======================================= */
+
+/* Tablets y móviles grandes (768px y menos) */
+@media (max-width: 768px) {
+  .footer-content-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* Mapa más pequeño */
+  #footerMap {
+    height: 250px !important;
+  }
+
+  /* Íconos sociales más pequeños */
+  .social-links a svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  /* Texto más pequeño */
+  footer h3 {
+    font-size: 1.1rem;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Móviles pequeños (576px y menos) */
+@media (max-width: 576px) {
+  .footer-content-wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* Mapa aún más pequeño */
+  #footerMap {
+    height: 200px !important;
+  }
+
+  /* Íconos sociales más pequeños */
+  .social-links a svg {
+    width: 25px !important;
+    height: 25px !important;
+  }
+
+  /* Texto más pequeño */
+  footer h3 {
+    font-size: 1rem;
+  }
+
+  footer p {
+    font-size: 0.85rem;
+  }
+
+  /* Ajustes para el layout de columnas */
+  .row > .col-md-6 {
+    margin-bottom: 30px;
+  }
+}
+
+/* Pantallas muy pequeñas (480px y menos) */
+@media (max-width: 480px) {
+  .footer-content-wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* Mapa muy pequeño */
+  #footerMap {
+    height: 180px !important;
+  }
+
+  /* Íconos sociales muy pequeños */
+  .social-links a svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* Texto muy pequeño */
+  footer h3 {
+    font-size: 0.95rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+  }
+
+  /* Ajustes para el layout de columnas */
+  .row > .col-md-6 {
+    margin-bottom: 20px;
+  }
 }

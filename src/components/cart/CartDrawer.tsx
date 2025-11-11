@@ -1,60 +1,74 @@
 import React from 'react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../hooks/useAuth';
 import './CartDrawer.css';
 
-// Función helper para formatear el precio
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('es-CL', {
+// 🧮 Helper para formatear el precio en pesos chilenos
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',
   }).format(price);
-};
 
 const CartDrawer: React.FC = () => {
-  // 1. Obtener 'clearCart' además de las otras funciones
-  const { 
-    isCartOpen, 
-    closeCart, 
-    cartItems, 
-    removeFromCart, 
+  // 📦 Hook del carrito
+  const {
+    isCartOpen,
+    closeCart,
+    cartItems,
+    removeFromCart,
     getTotal,
-    clearCart // <-- ¡Importante!
+    getDiscountedTotal,
+    clearCart,
   } = useCart();
 
-  // 2. Crear la función de "Finalizar Compra"
+  // 👤 Hook de autenticación
+  const { user } = useAuth();
+
+  // 🛒 Acción al finalizar compra
   const handleCheckout = () => {
-    // 1. Simular la compra con una alerta
     alert('¡Gracias por tu compra!');
-    
-    // 2. Vaciar el carrito
     clearCart();
-    
-    // 3. Cerrar el panel
     closeCart();
   };
 
   return (
-    <aside className={`drawer ${isCartOpen ? 'is-open' : ''}`} aria-labelledby="cartTitle" role="dialog" aria-modal="true">
-      
+    <aside
+      className={`drawer ${isCartOpen ? 'is-open' : ''}`}
+      aria-labelledby="cartTitle"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* 🧭 Encabezado */}
       <div className="drawer-header">
         <h3 id="cartTitle">Tu carrito</h3>
-        <button type="button" className="drawer-close-btn" onClick={closeCart} aria-label="Cerrar">✕</button>
+        <button
+          type="button"
+          className="drawer-close-btn"
+          onClick={closeCart}
+          aria-label="Cerrar"
+        >
+          ✕
+        </button>
       </div>
 
+      {/* 🧾 Cuerpo del carrito */}
       <div className="drawer-body">
         {cartItems.length === 0 ? (
           <p className="cart-empty-message">Tu carrito está vacío.</p>
         ) : (
-          cartItems.map(item => (
+          cartItems.map((item) => (
             <div key={item.product.codigo} className="cart-line">
               <img src={item.product.imagen} alt={item.product.nombre} />
               <div className="info">
                 <strong>{item.product.nombre}</strong>
-                <span className="price">{formatPrice(item.product.precio)}</span>
+                <span className="price">
+                  {formatPrice(item.product.precio)}
+                </span>
               </div>
               <div className="actions">
                 <span className="quantity">x {item.quantity}</span>
-                <button 
+                <button
                   className="remove-btn"
                   onClick={() => removeFromCart(item.product.codigo)}
                 >
@@ -66,19 +80,38 @@ const CartDrawer: React.FC = () => {
         )}
       </div>
 
-      {/* Solo mostramos el footer si hay items */}
+      {/* 🧮 Totales y descuentos */}
       {cartItems.length > 0 && (
         <div className="drawer-footer">
+          {/* Total bruto */}
           <div className="total">
             <span>Total</span>
             <strong>{formatPrice(getTotal())}</strong>
           </div>
-          
-          {/* 3. Conectar el botón a la nueva función */}
-          <button 
-            type="button" 
+
+          {/* Descuento DUOC si aplica */}
+          {user && user.email.endsWith('@duocuc.cl') && (
+            <>
+              <div className="discount">
+                <span>Descuento DUOC (20%)</span>
+                <strong>
+                  -{formatPrice(getTotal() - getDiscountedTotal())}
+                </strong>
+              </div>
+
+              <div className="total-discounted">
+                <span>Total con descuento</span>
+                <strong>{formatPrice(getDiscountedTotal())}</strong>
+              </div>
+            </>
+          )}
+
+          {/* Botón de finalizar compra */}
+          <button
+            type="button"
             id="checkout"
-            onClick={handleCheckout} // ¡AQUÍ ESTÁ LA MAGIA!
+            className="checkout-btn"
+            onClick={handleCheckout}
           >
             Finalizar compra
           </button>

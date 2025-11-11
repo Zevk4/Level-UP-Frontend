@@ -127,3 +127,74 @@
   .cat-card{ grid-template-columns: 1fr; min-height: 180px; }
   .cat-art{ padding: 10px 0; }
 }
+
+/* Ajustes adicionales para móviles */
+@media (max-width: 576px){
+  .cat-pop {
+    padding: 16px 15px 8px;
+  }
+
+  .cat-grid {
+    gap: 15px;
+  }
+
+  .cat-card {
+    min-height: 160px;
+    padding: 16px 18px;
+  }
+
+  .cat-info {
+    padding: 16px 18px;
+    gap: 6px;
+  }
+
+  .cat-info h4 {
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+
+  .cat-info p {
+    font-size: 0.85rem;
+  }
+
+  .cat-cta {
+    margin-top: 12px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px){
+  .cat-pop {
+    padding: 12px 10px 8px;
+  }
+
+  .cat-grid {
+    gap: 12px;
+  }
+
+  .cat-card {
+    min-height: 140px;
+    padding: 14px 16px;
+  }
+
+  .cat-info {
+    padding: 14px 16px;
+    gap: 4px;
+  }
+
+  .cat-info h4 {
+    font-size: 1.1rem;
+    line-height: 1.1;
+  }
+
+  .cat-info p {
+    font-size: 0.8rem;
+  }
+
+  .cat-cta {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}

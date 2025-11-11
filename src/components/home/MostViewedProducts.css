@@ -10,6 +10,61 @@
     padding: 32px 55px 8px;
 }
 
+/* Responsive para MostViewedProducts */
+@media (max-width: 768px) {
+  .mas-visto {
+    padding: 24px 20px 8px;
+  }
+
+  .mv-head {
+    padding: 0 3px 8px;
+  }
+
+  .mv-head h3 {
+    font-size: 1.3rem;
+  }
+
+  .mv-more {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .mas-visto {
+    padding: 20px 15px 8px;
+  }
+
+  .mv-head {
+    padding: 0 2px 6px;
+  }
+
+  .mv-head h3 {
+    font-size: 1.2rem;
+  }
+
+  .mv-more {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mas-visto {
+    padding: 16px 10px 8px;
+  }
+
+  .mv-head {
+    padding: 0 1px 4px;
+  }
+
+  .mv-head h3 {
+    font-size: 1.1rem;
+  }
+
+  .mv-more {
+    font-size: 0.8rem;
+  }
+}
+
 .mv-head {
     display: flex;
     align-items: center;

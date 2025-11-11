@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Product, CartItem } from '../types'; // Importa los tipos
+import { useAuth } from '../hooks/useAuth'; // Importar el hook de auth
 
 // 1. Definir la forma del Contexto
 interface CartContextType {
@@ -9,6 +10,7 @@ interface CartContextType {
     clearCart: () => void;
     getItemCount: () => number;
     getTotal: () => number;
+    getDiscountedTotal: () => number; // Nuevo método para total con descuento
 
     // --- ¡AÑADIDO! ---
     // Estado y funciones para controlar el panel (drawer)
@@ -39,6 +41,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     // --- ¡AÑADIDO! ---
     // Estado para el panel (drawer)
     const [isCartOpen, setIsCartOpen] = useState(false);
+
+    // Obtener el usuario autenticado
+    const { user } = useAuth();
 
     // 5. Efecto: Guarda el carrito en localStorage CADA VEZ que cambie
     useEffect(() => {
@@ -80,6 +85,16 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return cartItems.reduce((total, item) => total + (item.product.precio * item.quantity), 0);
     };
 
+    // Nuevo método para calcular el total con descuento
+    const getDiscountedTotal = () => {
+        const total = getTotal();
+        // Aplicar 20% de descuento si el usuario tiene email @duocuc.cl
+        if (user && user.email.endsWith('@duocuc.cl')) {
+            return total * 0.8; // 20% descuento
+        }
+        return total;
+    };
+
     // --- ¡AÑADIDO! ---
     // Funciones para controlar el panel
     const openCart = () => setIsCartOpen(true);
@@ -93,6 +108,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         clearCart,
         getItemCount,
         getTotal,
+        getDiscountedTotal, // Nuevo método
         // --- ¡AÑADIDO! ---
         isCartOpen,
         openCart,

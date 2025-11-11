@@ -1,44 +1,50 @@
-import { FormEvent, useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import { useModal } from '../../context/ModalContext';
+import { AuthContextType } from '../../types/index';
 import { useForm } from '../../hooks/useForm';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import styles from './LoginForm.module.css';
 
-export default function LoginForm() {
-  const { login } = useAuth();
+const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
+
+  const { login } = useContext(AuthContext) as AuthContextType;
+
+  const { closeLoginModal } = useModal();
+
+  const [authError, setAuthError] = useState<string>('');
+
   const { values, errors, handleChange, validate } = useForm({
     email: '',
     password: ''
   });
-  const [message, setMessage] = useState<string>('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage('');
+    setAuthError('');
 
-    if (!validate()) return;
+    if (validate()) {
+      const result = login(values.email, values.password);
 
-    const result = login(values.email, values.password);
-    
-    if (result.success && result.user) {
-      setMessage('¡Inicio de sesión exitoso!');
-      setTimeout(() => {
-        if (result.user!.email.endsWith('@adminlvup.cl')) {
-          window.location.href = '/admin';
+      if (result.success && result.user) {
+        closeLoginModal();
+
+        if (result.user.role === 'admin') {
+          navigate('/admin');
         } else {
-          window.location.href = '/';
+          navigate('/');
         }
-      }, 1000);
-    } else {
-      setMessage(result.message || 'Error al iniciar sesión');
+      } else {
+        setAuthError(result.message || 'Error desconocido');
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h1 className={styles.title}>Iniciar Sesión</h1>
-      
+    <form onSubmit={handleSubmit} noValidate>
       <Input
         name="email"
         type="email"
@@ -47,7 +53,6 @@ export default function LoginForm() {
         onChange={handleChange}
         error={errors.email}
       />
-      
       <Input
         name="password"
         type="password"
@@ -57,17 +62,16 @@ export default function LoginForm() {
         error={errors.password}
       />
 
-      <a href="#" className={styles.forgotLink}>
-        ¿Olvidaste tu contraseña?
-      </a>
+      <h1 className={styles.title}>Iniciar Sesión</h1>
+      <span className={styles.subtitle}>Ingresa con tu email y contraseña</span>
 
-      {message && (
-        <p className={`${styles.message} ${message.includes('exitoso') ? styles.success : styles.error}`}>
-          {message}
-        </p>
-      )}
+      {authError && <p className={styles.errorText}>{authError}</p>}
 
-      <Button type="submit">Ingresar</Button>
+      <Button type="submit" variant="primary">
+        Iniciar Sesión
+      </Button>
     </form>
   );
-}
+};
+
+export default LoginForm;

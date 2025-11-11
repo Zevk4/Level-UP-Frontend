@@ -1,11 +1,20 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "types/*": ["types/*"],
+      "data/*": ["data/*"],
+      "context/*": ["context/*"],
+      "components/*": ["components/*"]
+      
+    },
     "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,5 +31,13 @@
   },
   "include": [
     "src"
+  ]
+  ,
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/setupTests.ts"
   ]
 }

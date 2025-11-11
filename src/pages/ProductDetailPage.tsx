@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Row, Col, Image, Button } from 'react-bootstrap';
 
-import productsData from '../data/productos.json';
+import { useProducts } from '../context/ProductContext';
 import { Product } from '../types';
 
 // 1. Importar el hook 'useCart'
@@ -22,11 +22,13 @@ const ProductDetailPage: React.FC = () => {
     // 2. Obtener la función 'addToCart' del contexto
     const { addToCart } = useCart();
 
-    // Encontrar el producto (sin cambios)
+    // Acceder a los productos desde el contexto
+    const { products } = useProducts();
+
+    // Encontrar el producto
     const product: Product | undefined = useMemo(() => {
-        const allProducts = productsData as Product[];
-        return allProducts.find(p => p.codigo === codigo);
-    }, [codigo]);
+        return products.find(p => p.codigo === codigo);
+    }, [codigo, products]);
 
     // Manejar el caso de que el producto no se encuentre (sin cambios)
     if (!product) {

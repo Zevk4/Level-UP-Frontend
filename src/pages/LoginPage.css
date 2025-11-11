@@ -13,8 +13,8 @@
 
 .login-modal-content {
   position: relative;
-  width: 80%;
-  max-width: 768px;
+  width: 90%;
+  max-width: 800px;
   background-color: #1a1a1a;
   border-radius: 20px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
@@ -32,3 +32,20 @@
   cursor: pointer;
   z-index: 1100;
 }
+
+/* Para desktop: forzar que el auth-container sea horizontal */
+@media (min-width: 768px) {
+  .login-modal-content {
+    max-width: 900px;
+    min-height: 520px;
+    display: flex;
+  }
+
+  .login-modal-content .auth-container {
+    width: 100%;
+    max-width: none;
+    min-height: 520px;
+    height: auto;
+  }
+}
+

@@ -16,8 +16,8 @@
   {
     "id": 3,
     "nombre": "Cliente General",
-    "email": "cliente@duocuc.cl",
-    "password": "cliente123",
+    "email": "cli@duocuc.cl",
+    "password": "cli123",
     "role": "cliente"
   }
 ]
