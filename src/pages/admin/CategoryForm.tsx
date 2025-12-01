@@ -126,20 +126,20 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
               </div>
             ))}
           </div>
-          <div className="flex gap-2 mt-2">
+          <div className="flex flex-col sm:flex-row gap-2 mt-2">
             <input type="text" placeholder="Nombre Subcategoría" value={newSubcategoryName} onChange={(e) => setNewSubcategoryName(e.target.value)}
               className="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500 text-white" />
             <input type="text" placeholder="Enlace Subcategoría" value={newSubcategoryLink} readOnly
               className="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500 text-white" />
             <button type="button" onClick={handleAddSubcategory}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded text-sm">
+              className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded text-sm">
               +
             </button>
           </div>
         </div>
 
         {/* Botón de envío */}
-        <div className="flex gap-4 mt-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <button type="submit"
             className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
             {categoryToEdit ? 'Guardar Cambios' : 'Crear Categoría'}

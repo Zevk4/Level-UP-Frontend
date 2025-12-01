@@ -311,7 +311,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
         </div>
 
         {/* Botón de envío y mensaje */}
-        <div className="flex gap-4 mt-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <button type="submit"
             className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
             {productToEdit ? 'Guardar Cambios' : 'Agregar Producto'}
