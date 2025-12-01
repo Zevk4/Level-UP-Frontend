@@ -1,72 +1,86 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-// Usamos la ruta relativa que funcionó para AdminRoute: ../../
-import { Product } from 'types';
-import { useProducts } from 'context/ProductContext';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import { Product, Category } from '../../types'; // Import Category type
+import { useProducts } from '../../context/ProductContext';
+import categoriasData from '../../data/categorias.json'; // Import dynamic categories data
 
-// Definimos las subcategorías aquí, tal como en admin.js [cite: zevk4/level_up/Level_UP-9310edfd8117bb149283794742f89c0802893a4e/js/admin.js]
-const subcategoriasMap: { [key: string]: string[] } = {
-  "Juegos": ["Juegos de Mesa", "Videojuegos", "Cartas"],
-  "Perifericos": ["Mouse Gamer", "Teclados", "Auriculares", "Controles"],
-  "Consolas": ["PlayStation", "Xbox", "Nintendo"],
-  "Computacion": ["PC Escritorio", "Laptop", "Componentes"],
-  "Sillas Gamer": ["Secretlab", "DXRacer", "Cougar"],
-  "Accesorios": ["Mousepad", "Audífonos", "Cables"],
-  "Poleras Personalizadas": ["Otras"]
-};
-
-// Mapa de prefijos por subcategoría basado en productos.json
-const subcategoryPrefixMap: { [key: string]: string } = {
-  "Juegos de Mesa": "JM",
-  "Videojuegos": "JM",
-  "Cartas": "JM",
-  "Controles": "AC",
-  "Auriculares Gamer": "AC",
-  "Mouse Gamer": "MO",
-  "Teclados": "TE",
-  "PlayStation": "CO",
-  "Xbox": "CO",
-  "Nintendo": "CO",
-  "PC Escritorio": "CG",
-  "Laptop": "CG",
-  "Componentes": "COMP",
-  "Secretlab": "SG",
-  "DXRacer": "SG",
-  "Cougar": "SG",
-  "Mousepad": "MP",
-  "Audífonos": "AC",
-  "Otras": "PP"
-};
-
-// Definimos los props que este componente recibirá de AdminPage
 interface ProductFormProps {
   onAddProduct: (product: Product) => void;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
-  // Estados para cada campo del formulario
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState(0);
   const [categoria, setCategoria] = useState('');
   const [subcategoria, setSubcategoria] = useState('');
   const [imagenUrl, setImagenUrl] = useState('');
-  const [preview, setPreview] = useState<string | null>(null); // Para la vista previa de la imagen
-  const [message, setMessage] = useState(''); // Mensaje de éxito o error
+  const [marca, setMarca] = useState('');
+  const [preview, setPreview] = useState<string | null>(null);
+  const [message, setMessage] = useState('');
 
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<string[]>([]);
 
-  // Acceder a los productos existentes para generar códigos únicos
+  // States for new category/subcategory inputs
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newSubcategoryName, setNewSubcategoryName] = useState('');
+
   const { products } = useProducts();
 
-  // Lógica de admin.js para cambiar subcategorías [cite: zevk4/level_up/Level_UP-9310edfd8117bb149283794742f89c0802893a4e/js/admin.js]
-  const handleCategoriaChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const cat = e.target.value;
-    setCategoria(cat);
-    setSubcategoria(''); // Resetea subcategoría
-    setSubcategoriasDisponibles(subcategoriasMap[cat] || []);
+  useEffect(() => {
+    setAllCategories(categoriasData);
+  }, []);
+
+  // Function to add a new category
+  const handleAddNewCategory = () => {
+    if (newCategoryName.trim() && !allCategories.some(cat => cat.title.toLowerCase() === newCategoryName.trim().toLowerCase())) {
+      const newCat: Category = {
+        title: newCategoryName.trim(),
+        link: `/category?cat=${encodeURIComponent(newCategoryName.trim())}`,
+        subcategories: []
+      };
+      setAllCategories(prev => [...prev, newCat]);
+      setNewCategoryName('');
+      setMessage(`Categoría "${newCategoryName.trim()}" agregada.`);
+    } else {
+      setMessage('El nombre de la categoría es inválido o ya existe.');
+    }
   };
 
-  // Lógica de admin.js para la vista previa de imagen [cite: zevk4/level_up/Level_UP-9310edfd8117bb149283794742f89c0802893a4e/js/admin.js]
+  // Function to add a new subcategory to the selected category
+  const handleAddNewSubcategory = () => {
+    if (newSubcategoryName.trim() && categoria) {
+      setAllCategories(prevCategories => {
+        return prevCategories.map(cat => {
+          if (cat.title === categoria) {
+            if (!cat.subcategories.some(sub => sub.name.toLowerCase() === newSubcategoryName.trim().toLowerCase())) {
+              const newSub = {
+                name: newSubcategoryName.trim(),
+                link: `/category?cat=${encodeURIComponent(categoria)}&sub=${encodeURIComponent(newSubcategoryName.trim())}`
+              };
+              // Update subcategoriasDisponibles immediately
+              setSubcategoriasDisponibles(prev => [...prev, newSub.name]);
+              return { ...cat, subcategories: [...cat.subcategories, newSub] };
+            }
+          }
+          return cat;
+        });
+      });
+      setNewSubcategoryName('');
+      setMessage(`Subcategoría "${newSubcategoryName.trim()}" agregada a "${categoria}".`);
+    } else {
+      setMessage('El nombre de la subcategoría es inválido o no se ha seleccionado una categoría.');
+    }
+  };
+
+  const handleCategoriaChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const catTitle = e.target.value;
+    setCategoria(catTitle);
+    setSubcategoria('');
+    const selectedCategory = allCategories.find(c => c.title === catTitle);
+    setSubcategoriasDisponibles(selectedCategory ? selectedCategory.subcategories.map(s => s.name) : []);
+  };
+
   const updatePreview = (src: string | null) => {
     setPreview(src);
   };
@@ -77,7 +91,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
       const reader = new FileReader();
       reader.onload = () => updatePreview(reader.result as string);
       reader.readAsDataURL(file);
-      setImagenUrl(''); // Limpia el input de URL si se sube un archivo
+      setImagenUrl('');
     }
   };
 
@@ -87,23 +101,45 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
     updatePreview(url || null);
   };
 
-  // Lógica de admin.js para el envío del formulario [cite: zevk4/level_up/Level_UP-9310edfd8117bb149283794742f89c0802893a4e/js/admin.js]
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!nombre || !descripcion || isNaN(precio) || !categoria || !subcategoria) {
+    if (!nombre || !descripcion || isNaN(precio) || !categoria || !subcategoria || !marca) {
       setMessage('Todos los campos obligatorios deben completarse.');
       return;
     }
 
-    // Generar código basado en la subcategoría, siguiendo el patrón de productos.json
-    const prefix = subcategoryPrefixMap[subcategoria] || categoria.substring(0, 2).toUpperCase();
+    // Dynamically generate prefix based on selected subcategory or category
+    const getPrefix = (subcatName: string, catTitle: string) => {
+      // Find the subcategory in allCategories to get its link, then derive prefix
+      for (const cat of allCategories) {
+        if (cat.title === catTitle) {
+          const sub = cat.subcategories.find(s => s.name === subcatName);
+          if (sub) {
+            // Extract prefix from link, e.g., /category?cat=Consolas&sub=PlayStation -> CO
+            const match = sub.link.match(/sub=([^&]+)/);
+            if (match && match[1]) {
+              const decodedSub = decodeURIComponent(match[1]);
+              if (decodedSub === "PlayStation") return "CO";
+              if (decodedSub === "Xbox Series") return "AC"; // This might need adjustment based on desired prefix logic
+              // Fallback or more complex logic to derive prefix from subcategory name
+              return decodedSub.substring(0, 2).toUpperCase();
+            }
+          }
+          break;
+        }
+      }
+      return catTitle.substring(0, 2).toUpperCase(); // Fallback to category prefix
+    };
+
+    const prefix = getPrefix(subcategoria, categoria);
+
     const productosEnSubcategoria = products.filter(p => p.subcategoria === subcategoria);
     const ultimoNumero = productosEnSubcategoria.length > 0
-      ? Math.max(...productosEnSubcategoria.map(p => parseInt(p.codigo.slice(2)))) + 1
+      ? Math.max(...productosEnSubcategoria.map(p => parseInt(p.codigo.slice(prefix.length)))) + 1
       : 1;
     const codigo = prefix + ultimoNumero.toString().padStart(3, '0');
 
-    const imagen = preview || ''; // Usa la vista previa (sea Data URL o URL)
+    const imagen = preview || '';
 
     const nuevoProducto: Product = {
       codigo,
@@ -113,18 +149,18 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
       categoria,
       subcategoria,
       imagen,
-      marca: "Generica" // Añadir marca por defecto para productos creados dinámicamente
+      marca
     };
 
-    onAddProduct(nuevoProducto); // Llama a la función del padre (AdminPage)
+    onAddProduct(nuevoProducto);
 
-    // Resetea el formulario
     setNombre('');
     setDescripcion('');
     setPrecio(0);
     setCategoria('');
     setSubcategoria('');
     setImagenUrl('');
+    setMarca('');
     setPreview(null);
     setSubcategoriasDisponibles([]);
     setMessage(`Producto "${nombre}" agregado correctamente. Código: ${codigo}`);
@@ -157,29 +193,70 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
             className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
+        {/* Marca del Producto */}
+        <div>
+          <label htmlFor="productBrand" className="block mb-1 font-medium">Marca</label>
+          <input type="text" id="productBrand" value={marca} onChange={(e) => setMarca(e.target.value)} required
+            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+
         {/* Categoría */}
         <div>
           <label htmlFor="productCategory" className="block mb-1 font-medium">Categoría</label>
           <select id="productCategory" value={categoria} onChange={handleCategoriaChange} required
             className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500">
             <option value="">-- Selecciona una categoría --</option>
-            {Object.keys(subcategoriasMap).map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+            {allCategories.map(cat => (
+              <option key={cat.title} value={cat.title}>{cat.title}</option>
             ))}
           </select>
+          <div className="flex gap-2 mt-2">
+            <input
+              type="text"
+              placeholder="Nueva Categoría"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900"
+            />
+            <button
+              type="button"
+              onClick={handleAddNewCategory}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         {/* Subcategoría (Dinámica) */}
-        <div>
-          <label htmlFor="productSubcategory" className="block mb-1 font-medium">Subcategoría</label>
-          <select id="productSubcategory" value={subcategoria} onChange={(e) => setSubcategoria(e.target.value)} required
-            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500">
-            <option value="">-- Selecciona una subcategoría --</option>
-            {subcategoriasDisponibles.map(sub => (
-              <option key={sub} value={sub}>{sub}</option>
-            ))}
-          </select>
-        </div>
+        {categoria && (
+          <div>
+            <label htmlFor="productSubcategory" className="block mb-1 font-medium">Subcategoría</label>
+            <select id="productSubcategory" value={subcategoria} onChange={(e) => setSubcategoria(e.target.value)} required
+              className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="">-- Selecciona una subcategoría --</option>
+              {subcategoriasDisponibles.map(sub => (
+                <option key={sub} value={sub}>{sub}</option>
+              ))}
+            </select>
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                placeholder="Nueva Subcategoría"
+                value={newSubcategoryName}
+                onChange={(e) => setNewSubcategoryName(e.target.value)}
+                className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900"
+              />
+              <button
+                type="button"
+                onClick={handleAddNewSubcategory}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Imagen del Producto */}
         <div>
