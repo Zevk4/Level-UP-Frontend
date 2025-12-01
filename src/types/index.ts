@@ -28,6 +28,7 @@ export interface Product {
   nombre: string;
   precio: number;
   descripcion: string;
+  marca: string;
 }
 
 export interface Category {

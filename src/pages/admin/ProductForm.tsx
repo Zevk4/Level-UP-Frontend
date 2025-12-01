@@ -112,7 +112,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
       precio,
       categoria,
       subcategoria,
-      imagen
+      imagen,
+      marca: "Generica" // Añadir marca por defecto para productos creados dinámicamente
     };
 
     onAddProduct(nuevoProducto); // Llama a la función del padre (AdminPage)
