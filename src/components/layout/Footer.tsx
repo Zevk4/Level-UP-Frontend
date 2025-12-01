@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
