@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 // Usamos las rutas relativas que hemos confirmado que funcionan
 import { AuthContext } from 'context/AuthContext'; 
 import { AuthContextType } from 'types';
 import { useProducts } from 'context/ProductContext'; 
-import ProductForm from 'pages/admin/ProductForm'; 
-import TopProducts from 'pages/admin/TopProducts'; 
+import ProductManagementPanel from 'pages/admin/ProductManagementPanel'; // Importar el nuevo componente
+import UserManagement from 'pages/admin/UserManagement'; // Importar el nuevo componente
+import CategoryManagement from 'pages/admin/CategoryManagement'; // Importar el nuevo componente
 
 const AdminPage: React.FC = () => {
   // Contexto de autenticación (para el saludo y logout)
@@ -16,6 +17,8 @@ const AdminPage: React.FC = () => {
   
   // Consumimos el contexto de productos
   const { products, addProduct, loading } = useProducts();
+
+  const [activeTab, setActiveTab] = useState<'products' | 'users' | 'categories'>('products');
 
   // Lógica de 'loading'
   if (loading) {
@@ -39,17 +42,38 @@ const AdminPage: React.FC = () => {
         </div>
       </header> {/* <-- Esta era la etiqueta que faltaba */}
 
-      {/* Esta es la sección que faltaba */}
-      <div className="flex gap-6"> 
-        <div className="flex-1 space-y-6">
-          {/* Pasamos la función 'addProduct' del contexto */}
-          <ProductForm onAddProduct={addProduct} />
+      <div className="flex mb-6 border-b border-gray-700">
+          <button
+            className={`py-2 px-4 text-sm font-medium ${activeTab === 'products' ? 'border-b-2 border-indigo-500 text-indigo-400' : 'text-gray-400 hover:text-gray-300'}`}
+            onClick={() => setActiveTab('products')}
+          >
+            Gestión de Productos
+          </button>
+          <button
+            className={`py-2 px-4 text-sm font-medium ${activeTab === 'users' ? 'border-b-2 border-indigo-500 text-indigo-400' : 'text-gray-400 hover:text-gray-300'}`}
+            onClick={() => setActiveTab('users')}
+          >
+            Gestión de Usuarios
+          </button>
+          <button
+            className={`py-2 px-4 text-sm font-medium ${activeTab === 'categories' ? 'border-b-2 border-indigo-500 text-indigo-400' : 'text-gray-400 hover:text-gray-300'}`}
+            onClick={() => setActiveTab('categories')}
+          >
+            Gestión de Categorías
+          </button>
         </div>
-        <aside className="w-80">
-          {/* 'products' es la lista actualizada de Firestore */}
-          <TopProducts products={products} />
-        </aside>
-      </div>
+
+        <div>
+          {activeTab === 'products' && (
+            <ProductManagementPanel />
+          )}
+          {activeTab === 'users' && (
+            <UserManagement /> // Usar el componente real
+          )}
+          {activeTab === 'categories' && (
+            <CategoryManagement /> // Usar el componente real
+          )}
+        </div>
     </div>
   );
 };

@@ -5,9 +5,10 @@ import categoriasData from '../../data/categorias.json'; // Import dynamic categ
 
 interface ProductFormProps {
   onAddProduct: (product: Product) => void;
+  productToEdit?: Product | null; // Nuevo prop para edición
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }) => {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState(0);
@@ -27,9 +28,33 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
 
   const { products } = useProducts();
 
+  // useEffect para pre-llenar el formulario si hay un producto para editar
   useEffect(() => {
-    setAllCategories(categoriasData);
-  }, []);
+    if (productToEdit) {
+      setNombre(productToEdit.nombre);
+      setDescripcion(productToEdit.descripcion);
+      setPrecio(productToEdit.precio);
+      setCategoria(productToEdit.categoria);
+      setSubcategoria(productToEdit.subcategoria);
+      setImagenUrl(productToEdit.imagen);
+      setMarca(productToEdit.marca);
+      setPreview(productToEdit.imagen);
+      // Cargar subcategorías disponibles para la categoría del producto a editar
+      const selectedCategory = allCategories.find(c => c.title === productToEdit.categoria);
+      setSubcategoriasDisponibles(selectedCategory ? selectedCategory.subcategories.map(s => s.name) : []);
+    } else {
+      // Resetear el formulario si no hay producto para editar (o si se deselecciona)
+      setNombre('');
+      setDescripcion('');
+      setPrecio(0);
+      setCategoria('');
+      setSubcategoria('');
+      setImagenUrl('');
+      setMarca('');
+      setPreview(null);
+      setSubcategoriasDisponibles([]);
+    }
+  }, [productToEdit, allCategories]);
 
   // Function to add a new category
   const handleAddNewCategory = () => {
@@ -108,41 +133,42 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
       return;
     }
 
-    // Dynamically generate prefix based on selected subcategory or category
-    const getPrefix = (subcatName: string, catTitle: string) => {
-      // Find the subcategory in allCategories to get its link, then derive prefix
-      for (const cat of allCategories) {
-        if (cat.title === catTitle) {
-          const sub = cat.subcategories.find(s => s.name === subcatName);
-          if (sub) {
-            // Extract prefix from link, e.g., /category?cat=Consolas&sub=PlayStation -> CO
-            const match = sub.link.match(/sub=([^&]+)/);
-            if (match && match[1]) {
-              const decodedSub = decodeURIComponent(match[1]);
-              if (decodedSub === "PlayStation") return "CO";
-              if (decodedSub === "Xbox Series") return "AC"; // This might need adjustment based on desired prefix logic
-              // Fallback or more complex logic to derive prefix from subcategory name
-              return decodedSub.substring(0, 2).toUpperCase();
+    let productCodigo = productToEdit?.codigo;
+
+    // Solo generamos un nuevo código si NO estamos editando un producto existente
+    if (!productCodigo) {
+      const getPrefix = (subcatName: string, catTitle: string) => {
+        for (const cat of allCategories) {
+          if (cat.title === catTitle) {
+            const sub = cat.subcategories.find(s => s.name === subcatName);
+            if (sub) {
+              const match = sub.link.match(/sub=([^&]+)/);
+              if (match && match[1]) {
+                const decodedSub = decodeURIComponent(match[1]);
+                if (decodedSub === "PlayStation") return "CO";
+                if (decodedSub === "Xbox Series") return "AC";
+                return decodedSub.substring(0, 2).toUpperCase();
+              }
             }
+            break;
           }
-          break;
         }
-      }
-      return catTitle.substring(0, 2).toUpperCase(); // Fallback to category prefix
-    };
+        return catTitle.substring(0, 2).toUpperCase();
+      };
 
-    const prefix = getPrefix(subcategoria, categoria);
+      const prefix = getPrefix(subcategoria, categoria);
 
-    const productosEnSubcategoria = products.filter(p => p.subcategoria === subcategoria);
-    const ultimoNumero = productosEnSubcategoria.length > 0
-      ? Math.max(...productosEnSubcategoria.map(p => parseInt(p.codigo.slice(prefix.length)))) + 1
-      : 1;
-    const codigo = prefix + ultimoNumero.toString().padStart(3, '0');
+      const productosEnSubcategoria = products.filter(p => p.subcategoria === subcategoria);
+      const ultimoNumero = productosEnSubcategoria.length > 0
+        ? Math.max(...productosEnSubcategoria.map(p => parseInt(p.codigo.slice(prefix.length)))) + 1
+        : 1;
+      productCodigo = prefix + ultimoNumero.toString().padStart(3, '0');
+    }
 
     const imagen = preview || '';
 
-    const nuevoProducto: Product = {
-      codigo,
+    const productToSubmit: Product = {
+      codigo: productCodigo,
       nombre,
       descripcion,
       precio,
@@ -152,18 +178,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
       marca
     };
 
-    onAddProduct(nuevoProducto);
+    onAddProduct(productToSubmit); // onAddProduct ahora manejará add o update
 
-    setNombre('');
-    setDescripcion('');
-    setPrecio(0);
-    setCategoria('');
-    setSubcategoria('');
-    setImagenUrl('');
-    setMarca('');
-    setPreview(null);
-    setSubcategoriasDisponibles([]);
-    setMessage(`Producto "${nombre}" agregado correctamente. Código: ${codigo}`);
+    // Limpiar formulario solo si es un nuevo producto o si se desea después de editar
+    if (!productToEdit) {
+      setNombre('');
+      setDescripcion('');
+      setPrecio(0);
+      setCategoria('');
+      setSubcategoria('');
+      setImagenUrl('');
+      setMarca('');
+      setPreview(null);
+      setSubcategoriasDisponibles([]);
+      setMessage(`Producto "${nombre}" ${productToEdit ? 'actualizado' : 'agregado'} correctamente. Código: ${productCodigo}`);
+    } else {
+      setMessage(`Producto "${nombre}" actualizado correctamente. Código: ${productCodigo}`);
+    }
   };
 
   return (
@@ -276,7 +307,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct }) => {
         {/* Botón de envío y mensaje */}
         <button type="submit"
           className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
-          Agregar Producto
+          {productToEdit ? 'Guardar Cambios' : 'Agregar Producto'}
         </button>
         {message && <p className="mt-2 text-sm">{message}</p>}
       </form>

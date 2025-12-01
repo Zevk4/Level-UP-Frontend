@@ -7,6 +7,8 @@ import { storageService } from 'services/storageService'; // CAMBIO: Importar el
 interface ProductContextType {
   products: Product[];
   addProduct: (newProduct: Product) => void;
+  updateProduct: (updatedProduct: Product) => void; // Nueva función
+  deleteProduct: (productCode: string) => void;     // Nueva función
   loading: boolean;
 }
 
@@ -59,8 +61,30 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
     }
   };
 
+  const updateProduct = (updatedProduct: Product) => {
+    try {
+      const updatedProducts = products.map((prod) =>
+        prod.codigo === updatedProduct.codigo ? updatedProduct : prod
+      );
+      setProducts(updatedProducts);
+      storageService.local.set('products', updatedProducts);
+    } catch (error) {
+      console.error('Error al actualizar producto:', error);
+    }
+  };
+
+  const deleteProduct = (productCode: string) => {
+    try {
+      const updatedProducts = products.filter((prod) => prod.codigo !== productCode);
+      setProducts(updatedProducts);
+      storageService.local.set('products', updatedProducts);
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+    }
+  };
+
   return (
-    <ProductContext.Provider value={{ products, addProduct, loading }}>
+    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, loading }}>
       {children}
     </ProductContext.Provider>
   );
