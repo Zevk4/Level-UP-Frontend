@@ -35,6 +35,15 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
     }
   }, [title]); // Depende de los cambios en el título
 
+  useEffect(() => {
+    if (newSubcategoryName.trim()) {
+      const generatedSubLink = `/category?cat=${encodeURIComponent(title.trim())}&sub=${encodeURIComponent(newSubcategoryName.trim())}`;
+      setNewSubcategoryLink(generatedSubLink);
+    } else {
+      setNewSubcategoryLink('');
+    }
+  }, [newSubcategoryName, title]); // Depende del nombre de la subcategoría y el título de la categoría
+  
   const handleAddSubcategory = () => {
     if (newSubcategoryName.trim() && newSubcategoryLink.trim()) {
       setSubcategories([...subcategories, { name: newSubcategoryName.trim(), link: newSubcategoryLink.trim() }]);
@@ -113,7 +122,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
           <div className="flex gap-2 mt-2">
             <input type="text" placeholder="Nombre Subcategoría" value={newSubcategoryName} onChange={(e) => setNewSubcategoryName(e.target.value)}
               className="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500 text-white" />
-            <input type="text" placeholder="Enlace Subcategoría" value={newSubcategoryLink} onChange={(e) => setNewSubcategoryLink(e.target.value)}
+            <input type="text" placeholder="Enlace Subcategoría" value={newSubcategoryLink} readOnly
               className="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500 text-white" />
             <button type="button" onClick={handleAddSubcategory}
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded text-sm">
