@@ -29,7 +29,7 @@ const UserManagementPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-6" ref={panelRef}>
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6" ref={panelRef}>
       <div className="flex-1 space-y-6">
         <UserForm onSaveUser={handleSaveUser} userToEdit={editingUser} />
 
@@ -59,7 +59,7 @@ const UserManagementPanel: React.FC = () => {
         </div>
       </div>
       {/* Podríamos tener una sección lateral para estadísticas de usuario o algo similar */}
-      <aside className="w-80 p-4 bg-gray-800 rounded-lg text-white">
+      <aside className="w-full lg:w-80 mt-6 lg:mt-0 p-4 bg-gray-800 rounded-lg text-white">
         <h3 className="text-lg font-bold mb-2">Información Adicional</h3>
         <p>Total de usuarios: {users.length}</p>
         {/* Más contenido futuro */}

@@ -30,7 +30,7 @@ const ProductManagementPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-6" ref={panelRef}>
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6" ref={panelRef}>
       <div className="flex-1 space-y-6">
         <ProductForm onAddProduct={handleFormSubmit} productToEdit={editingProduct} /> {/* Pasar producto para edición */}
         
@@ -60,7 +60,7 @@ const ProductManagementPanel: React.FC = () => {
           </ul>
         </div>
       </div>
-      <aside className="w-80">
+      <aside className="w-full lg:w-80 mt-6 lg:mt-0">
         <TopProducts products={products} />
       </aside>
     </div>
