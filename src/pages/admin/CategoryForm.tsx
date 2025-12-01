@@ -14,15 +14,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
   const [newSubcategoryLink, setNewSubcategoryLink] = useState('');
   const [message, setMessage] = useState('');
 
+  const resetForm = () => {
+    setTitle('');
+    setLink('');
+    setSubcategories([]);
+    setNewSubcategoryName('');
+    setNewSubcategoryLink('');
+    setMessage('');
+  };
+
   useEffect(() => {
     if (categoryToEdit) {
       setTitle(categoryToEdit.title);
       setLink(categoryToEdit.link);
       setSubcategories(categoryToEdit.subcategories);
     } else {
-      setTitle('');
-      setLink('');
-      setSubcategories([]);
+      resetForm(); // Call resetForm when categoryToEdit is null
     }
   }, [categoryToEdit]);
 
@@ -132,10 +139,16 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
         </div>
 
         {/* Botón de envío */}
-        <button type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
-          {categoryToEdit ? 'Guardar Cambios' : 'Crear Categoría'}
-        </button>
+        <div className="flex gap-4 mt-4">
+          <button type="submit"
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
+            {categoryToEdit ? 'Guardar Cambios' : 'Crear Categoría'}
+          </button>
+          <button type="button" onClick={resetForm}
+            className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+            Limpiar Formulario
+          </button>
+        </div>
         {message && <p className="mt-2 text-sm text-white">{message}</p>}
       </form>
     </div>

@@ -28,6 +28,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
 
   const { products } = useProducts();
 
+  const resetForm = () => {
+    setNombre('');
+    setDescripcion('');
+    setPrecio(0);
+    setCategoria('');
+    setSubcategoria('');
+    setImagenUrl('');
+    setMarca('');
+    setPreview(null);
+    setMessage('');
+    setNewCategoryName('');
+    setNewSubcategoryName('');
+    setSubcategoriasDisponibles([]);
+  };
+
   // useEffect para pre-llenar el formulario si hay un producto para editar
   useEffect(() => {
     if (productToEdit) {
@@ -43,16 +58,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
       const selectedCategory = allCategories.find(c => c.title === productToEdit.categoria);
       setSubcategoriasDisponibles(selectedCategory ? selectedCategory.subcategories.map(s => s.name) : []);
     } else {
-      // Resetear el formulario si no hay producto para editar (o si se deselecciona)
-      setNombre('');
-      setDescripcion('');
-      setPrecio(0);
-      setCategoria('');
-      setSubcategoria('');
-      setImagenUrl('');
-      setMarca('');
-      setPreview(null);
-      setSubcategoriasDisponibles([]);
+      resetForm(); // Llama a resetForm cuando productToEdit es null
     }
   }, [productToEdit, allCategories]);
 
@@ -305,10 +311,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
         </div>
 
         {/* Botón de envío y mensaje */}
-        <button type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
-          {productToEdit ? 'Guardar Cambios' : 'Agregar Producto'}
-        </button>
+        <div className="flex gap-4 mt-4">
+          <button type="submit"
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
+            {productToEdit ? 'Guardar Cambios' : 'Agregar Producto'}
+          </button>
+          <button type="button" onClick={resetForm}
+            className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+            Limpiar Formulario
+          </button>
+        </div>
         {message && <p className="mt-2 text-sm">{message}</p>}
       </form>
     </div>
