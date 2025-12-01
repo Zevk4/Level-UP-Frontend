@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 // Usamos la ruta relativa que funcionó para AdminRoute: ../../
-import { Product } from '../../types/index';
-import { useProducts } from '../../context/ProductContext';
+import { Product } from 'types';
+import { useProducts } from 'context/ProductContext';
 
 // Definimos las subcategorías aquí, tal como en admin.js [cite: zevk4/level_up/Level_UP-9310edfd8117bb149283794742f89c0802893a4e/js/admin.js]
 const subcategoriasMap: { [key: string]: string[] } = {

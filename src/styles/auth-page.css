@@ -1,0 +1,12 @@
+/* =======================================
+   AUTH PAGE - CONSOLIDATED STYLES
+======================================= */
+
+/* Import base auth styles */
+@import url('./auth.css');
+
+/* Import responsive auth styles */
+@import url('./auth-responsive.css');
+
+/* Import page-specific styles */
+@import url('../pages/LoginPage.css');

@@ -1,11 +1,10 @@
 import React from 'react';
-import AuthLayout from '../components/auth/AuthLayout';
-import MatrixCanvas from '../components/canvas/MatrixCanvas';
-import { useModal } from '../context/ModalContext';
-import './LoginPage.css';
-import '../styles/auth.css';
-import '../styles/auth-fixed.css';
-import '../styles/auth-responsive.css';
+import AuthLayout from 'components/auth/AuthLayout';
+import MatrixCanvas from 'components/canvas/MatrixCanvas';
+import { useModal } from 'context/ModalContext';
+import '../styles/auth-page.css';
+import { useAuth } from 'hooks/useAuth';
+import { AuthProvider } from 'context/AuthContext';
 
 const LoginPage: React.FC = () => {
   const { isLoginModalOpen, closeLoginModal } = useModal();

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product, CartItem } from '../types'; // Importa los tipos
-import { useAuth } from '../hooks/useAuth'; // Importar el hook de auth
+import { Product, CartItem } from 'types';
+import { useAuth } from 'hooks/useAuth';
+import { storageService } from 'services/storageService'; // CAMBIO: Importar servicio
 
 // 1. Definir la forma del Contexto
 interface CartContextType {
@@ -10,10 +11,7 @@ interface CartContextType {
     clearCart: () => void;
     getItemCount: () => number;
     getTotal: () => number;
-    getDiscountedTotal: () => number; // Nuevo método para total con descuento
-
-    // --- ¡AÑADIDO! ---
-    // Estado y funciones para controlar el panel (drawer)
+    getDiscountedTotal: () => number;
     isCartOpen: boolean;
     openCart: () => void;
     closeCart: () => void;
@@ -22,35 +20,28 @@ interface CartContextType {
 // 2. Crear el Contexto
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// 3. Crear el Proveedor (El Componente "Cerebro")
+// 3. Crear el Proveedor
 interface CartProviderProps {
-    children: ReactNode; // 'children' es nuestra App
+    children: ReactNode;
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-    // 4. Estado: Inicializa el carrito desde localStorage
+    // 4. Estado: Inicializa el carrito desde el almacenamiento
     const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-        try {
-            const localData = localStorage.getItem('cart');
-            return localData ? JSON.parse(localData) : [];
-        } catch (error) {
-            return [];
-        }
+        // CAMBIO: Usar storageService.local
+        return storageService.local.get<CartItem[]>('cart') || [];
     });
 
-    // --- ¡AÑADIDO! ---
-    // Estado para el panel (drawer)
     const [isCartOpen, setIsCartOpen] = useState(false);
-
-    // Obtener el usuario autenticado
     const { user } = useAuth();
 
-    // 5. Efecto: Guarda el carrito en localStorage CADA VEZ que cambie
+    // 5. Efecto: Guarda el carrito CADA VEZ que cambie
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cartItems));
+        // CAMBIO: Usar storageService.local
+        storageService.local.set('cart', cartItems);
     }, [cartItems]);
 
-    // --- Funciones del Carrito (Sin cambios) ---
+    // --- Funciones del Carrito ---
 
     const addToCart = (product: Product) => {
         setCartItems(prevItems => {
@@ -85,22 +76,18 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return cartItems.reduce((total, item) => total + (item.product.precio * item.quantity), 0);
     };
 
-    // Nuevo método para calcular el total con descuento
     const getDiscountedTotal = () => {
         const total = getTotal();
-        // Aplicar 20% de descuento si el usuario tiene email @duocuc.cl
         if (user && user.email.endsWith('@duocuc.cl')) {
-            return total * 0.8; // 20% descuento
+            return total * 0.8;
         }
         return total;
     };
 
-    // --- ¡AÑADIDO! ---
-    // Funciones para controlar el panel
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
 
-    // 6. Valor que se expone a toda la app (con los nuevos valores)
+    // 6. Valor que se expone
     const value = {
         cartItems,
         addToCart,
@@ -108,8 +95,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         clearCart,
         getItemCount,
         getTotal,
-        getDiscountedTotal, // Nuevo método
-        // --- ¡AÑADIDO! ---
+        getDiscountedTotal,
         isCartOpen,
         openCart,
         closeCart
@@ -122,7 +108,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     );
 };
 
-// 7. Hook personalizado (la forma fácil de usar el contexto)
+// 7. Hook personalizado
 export const useCart = () => {
     const context = useContext(CartContext);
     if (context === undefined) {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'; // 1. Importar useRef y useEffect
 import { Link } from 'react-router-dom';
 import './MegaMenu.css';
-import menuData from '../../../data/categorias.json';
-import { Category } from '../../../types';
-import useWindowSize from '../../../hooks/useWindowSize';
+import menuData from 'data/categorias.json';
+import { Category } from 'types';
+import useWindowSize from 'hooks/useWindowSize';
 
 const MOBILE_BREAKPOINT = 992; // lg
 
@@ -17,7 +17,7 @@ const CategoryList: React.FC<{ onLinkClick: () => void }> = ({ onLinkClick }) =>
     categories.slice(itemsPerColumn * 2),
   ];
 
-  const { width } = useWindowSize();
+  const { width = 0 } = useWindowSize();
   const isMobile = width < MOBILE_BREAKPOINT;
 
   if (isMobile) {
@@ -87,7 +87,7 @@ interface MegaMenuProps {
 
 const MegaMenu: React.FC<MegaMenuProps> = ({ onLinkClick = () => { } }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { width } = useWindowSize();
+  const { width = 0 } = useWindowSize();
   const isMobile = width < MOBILE_BREAKPOINT;
 
   // 2. Crear una referencia para el contenedor del menú

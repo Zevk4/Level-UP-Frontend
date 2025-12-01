@@ -1,27 +1,11 @@
-import { useState, ChangeEvent } from 'react';
-import { FormValues, FormErrors, UseFormReturn } from '../types';
+import { useState, ChangeEvent, useCallback } from 'react';
+import { FormValues, FormErrors, UseFormReturn } from 'types';
 
 export const useForm = (initialValues: FormValues = {}): UseFormReturn => {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    
-    // Actualizar valores
-    setValues(prev => ({ ...prev, [name]: value }));
-    
-    // Limpiar error del campo cuando el usuario empieza a escribir
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-
-  const validateField = (name: string, value: string): string => {
+  const validateField = useCallback((name: string, value: string): string => {
     // Validar campo vacío
     if (!value.trim()) {
       return 'Este campo es requerido';
@@ -50,9 +34,27 @@ export const useForm = (initialValues: FormValues = {}): UseFormReturn => {
     }
 
     return '';
-  };
+  }, []);
 
-  const validate = (): boolean => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    
+    // Actualizar valores
+    setValues(prev => ({ ...prev, [name]: value }));
+    
+    // Validar el campo y actualizar los errores
+    const error = validateField(name, value);
+    setErrors(prev => {
+      if (error) {
+        return { ...prev, [name]: error };
+      }
+      // Si no hay error, eliminamos el error anterior para ese campo
+      const { [name]: _, ...rest } = prev;
+      return rest;
+    });
+  }, [validateField]);
+
+  const validate = useCallback((): boolean => {
     const newErrors: FormErrors = {};
     
     // Validar cada campo
@@ -67,16 +69,16 @@ export const useForm = (initialValues: FormValues = {}): UseFormReturn => {
     
     // Retornar true si no hay errores
     return Object.keys(newErrors).length === 0;
-  };
+  }, [values, validateField]);
 
-  const reset = (): void => {
+  const reset = useCallback((): void => {
     setValues(initialValues);
     setErrors({});
-  };
+  }, [initialValues]);
 
-  const setFieldError = (fieldName: string, errorMessage: string): void => {
+  const setFieldError = useCallback((fieldName: string, errorMessage: string): void => {
     setErrors(prev => ({ ...prev, [fieldName]: errorMessage }));
-  };
+  }, []);
 
   return { 
     values, 

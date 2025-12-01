@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Row, Col, Image, Button } from 'react-bootstrap';
 
-import { useProducts } from '../context/ProductContext';
-import { Product } from '../types';
+import { useProducts } from 'context/ProductContext';
+import { Product } from 'types';
 
 // 1. Importar el hook 'useCart'
-import { useCart } from '../context/CartContext';
+import { useCart } from 'context/CartContext';
 
 // Función helper para formatear el precio
 const formatPrice = (price: number) => {

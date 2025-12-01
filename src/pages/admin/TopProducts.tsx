@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 // Usamos la ruta relativa que funcionó para ProductForm: ../../
-import { Product } from '../../types/index'; 
+import { Product } from 'types'; 
 
 // 1. Definimos los props que este componente recibirá de AdminPage
 interface TopProductsProps {

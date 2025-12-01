@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, Form, InputGroup, ListGroup, Collapse } from 'react-bootstrap';
-import { Product } from '../../../types'; // Ajusta la ruta si es necesario
-import MegaMenu from './MegaMenu';
+import { Product } from 'types';
+import MegaMenu from 'components/layout/header/MegaMenu';
+import { useCart } from 'context/CartContext';
+import { useAuth } from 'hooks/useAuth';
+import { useModal } from 'context/ModalContext';
 
 // Función de formato de precio
 const formatPrice = (price: number) => {
@@ -12,46 +15,40 @@ const formatPrice = (price: number) => {
     }).format(price);
 };
 
-// 1. Definimos las props (similares, pero con estado de menús)
 interface HeaderMobileProps {
     searchTerm: string;
     results: Product[];
-    cartItemCount: number;
-    user: any;
-    logout: () => void;
     isMobileMenuOpen: boolean;
     isSearchOpen: boolean;
     onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSearchBlur: () => void;
     onSearchSubmit: (e: React.FormEvent) => void;
     onResultClick: () => void;
-    onOpenCart: () => void;
     onToggleMenu: (isExpanded: boolean) => void;
     onToggleSearch: () => void;
     onCloseMenus: () => void;
-    onOpenLoginModal: () => void;
     onLinkClick: () => void;
 }
 
 const HeaderMobile: React.FC<HeaderMobileProps> = ({
     searchTerm,
     results,
-    cartItemCount,
-    user,
-    logout,
     isMobileMenuOpen,
     isSearchOpen,
     onSearchChange,
     onSearchBlur,
     onSearchSubmit,
     onResultClick,
-    onOpenCart,
     onToggleMenu,
     onToggleSearch,
     onCloseMenus,
-    onOpenLoginModal,
-    onLinkClick
+    onLinkClick,
 }) => {
+    const { cartItems, openCart } = useCart();
+    const { user, logout } = useAuth();
+    const { openLoginModal } = useModal();
+    const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
     return (
         <Navbar
             variant="dark"
@@ -95,13 +92,13 @@ const HeaderMobile: React.FC<HeaderMobileProps> = ({
                                 </div>
                             </div>
                         ) : (
-                            <Nav.Link onClick={() => { onOpenLoginModal(); onCloseMenus(); }} className="icon-button me-2">
+                            <Nav.Link onClick={() => { openLoginModal(); onCloseMenus(); }} className="icon-button me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" /></svg>
                             </Nav.Link>
                         )}
                         <Nav.Link
                             onClick={() => {
-                                onOpenCart();
+                                openCart();
                                 onCloseMenus();
                             }}
                             className="position-relative icon-button me-2"

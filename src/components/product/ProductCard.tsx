@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Product } from '../../types';
+import { Product } from 'types';
 import './ProductCard.css';
 
 // 1. Importar el hook 'useCart'
-import { useCart } from '../../context/CartContext';
+import { useCart } from 'context/CartContext';
 
 // Definición del tipo
 interface ProductCardProps {

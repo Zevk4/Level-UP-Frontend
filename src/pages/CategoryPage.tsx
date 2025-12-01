@@ -3,9 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 
 // Importar los datos y componentes
-import { useProducts } from '../context/ProductContext';
-import { Product } from '../types';
-import ProductCard from '../components/product/ProductCard';
+import { useProducts } from 'context/ProductContext';
+import { Product } from 'types';
+import ProductCard from 'components/product/ProductCard';
 
 const CategoryPage: React.FC = () => {
   // 1. Hook para leer los parámetros de la URL

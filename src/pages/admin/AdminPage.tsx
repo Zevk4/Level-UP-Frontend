@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 // Usamos las rutas relativas que hemos confirmado que funcionan
-import { AuthContext } from '../../context/AuthContext'; 
-import { AuthContextType } from '../../types/index';
-import { useProducts } from '../../context/ProductContext'; 
-import ProductForm from '../../pages/admin/ProductForm'; 
-import TopProducts from '../../pages/admin/TopProducts'; 
+import { AuthContext } from 'context/AuthContext'; 
+import { AuthContextType } from 'types';
+import { useProducts } from 'context/ProductContext'; 
+import ProductForm from 'pages/admin/ProductForm'; 
+import TopProducts from 'pages/admin/TopProducts'; 
 
 const AdminPage: React.FC = () => {
   // Contexto de autenticación (para el saludo y logout)

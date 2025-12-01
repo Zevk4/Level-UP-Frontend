@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
   
-import { AuthContext } from '../../context/AuthContext'; 
-import { AuthContextType } from '../../types/index'; 
+import { AuthContext } from 'context/AuthContext'; 
+import { AuthContextType } from 'types'; 
 
 const AdminRoute: React.FC = () => {
   // 1. Usamos el hook useContext de React para leer nuestro AuthContext

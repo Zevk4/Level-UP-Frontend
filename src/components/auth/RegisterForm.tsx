@@ -1,8 +1,8 @@
 import { FormEvent, useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { useForm } from '../../hooks/useForm';
-import Input from '../ui/Input';
-import Button from '../ui/Button';
+import { useAuth } from 'hooks/useAuth';
+import { useForm } from 'hooks/useForm';
+import Input from 'components/ui/Input';
+import Button from 'components/ui/Button';
 import styles from './RegisterForm.module.css';
 
 export default function RegisterForm() {

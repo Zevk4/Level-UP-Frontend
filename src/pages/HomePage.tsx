@@ -1,9 +1,9 @@
 import React from 'react';
 
 // Importar los componentes de la página de inicio
-import Reviews from '../components/home/Reviews'; // 1. Importar Reviews
-import MostViewedProducts from '../components/home/MostViewedProducts';
-import PopularCategories from '../components/home/PopularCategories';
+import Reviews from 'components/home/Reviews'; // 1. Importar Reviews
+import MostViewedProducts from 'components/home/MostViewedProducts';
+import PopularCategories from 'components/home/PopularCategories';
 
 const HomePage: React.FC = () => {
   return (

@@ -2,9 +2,9 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 // Importar los datos y componentes
-import { useProducts } from '../context/ProductContext';
-import { Product } from '../types';
-import ProductCard from '../components/product/ProductCard';
+import { useProducts } from 'context/ProductContext';
+import { Product } from 'types';
+import ProductCard from 'components/product/ProductCard';
 
 const AllProductsPage: React.FC = () => {
   // 1. Usar el contexto para obtener todos los productos (incluyendo los agregados dinámicamente)

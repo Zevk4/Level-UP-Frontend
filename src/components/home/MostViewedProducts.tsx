@@ -3,9 +3,9 @@ import { Carousel, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 // 1. Importar los datos y los componentes
-import { useProducts } from '../../context/ProductContext'; // Usar el contexto
-import ProductCard from '../product/ProductCard';
-import { Product } from '../../types'; // Importa el tipo
+import { useProducts } from 'context/ProductContext'; // Usar el contexto
+import ProductCard from 'components/product/ProductCard';
+import { Product } from 'types'; // Importa el tipo
 
 // 1. Importa el archivo CSS
 import './MostViewedProducts.css';

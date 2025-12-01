@@ -1,6 +1,6 @@
 import React from 'react';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../hooks/useAuth';
+import { useCart } from 'context/CartContext';
+import { useAuth } from 'hooks/useAuth';
 import './CartDrawer.css';
 
 // 🧮 Helper para formatear el precio en pesos chilenos

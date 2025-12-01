@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-// --- CAMBIO: Usando rutas absolutas desde la carpeta 'src/' ---
-import { Product } from 'types/index'; 
-import productosData from 'data/productos.json'; // Carga inicial
+import { Product } from 'types';
+import productosData from 'data/productos.json';
+import { storageService } from 'services/storageService'; // CAMBIO: Importar el servicio
 
 // --- Definición del Contexto ---
 interface ProductContextType {
@@ -32,12 +31,14 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
   useEffect(() => {
     setLoading(true);
     try {
-      const storedProducts = sessionStorage.getItem('products');
+      // CAMBIO: Usar storageService.local en lugar de sessionStorage
+      const storedProducts = storageService.local.get<Product[]>('products');
       if (storedProducts) {
-        setProducts(JSON.parse(storedProducts));
+        setProducts(storedProducts);
       } else {
         setProducts(productosData);
-        sessionStorage.setItem('products', JSON.stringify(productosData));
+        // CAMBIO: Usar storageService.local para guardar
+        storageService.local.set('products', productosData);
       }
     } catch (error) {
       console.error('Error al cargar productos:', error);
@@ -51,7 +52,8 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
     try {
       const updatedProducts = [newProduct, ...products];
       setProducts(updatedProducts);
-      sessionStorage.setItem('products', JSON.stringify(updatedProducts));
+      // CAMBIO: Usar storageService.local para guardar
+      storageService.local.set('products', updatedProducts);
     } catch (error) {
       console.error('Error al agregar producto:', error);
     }

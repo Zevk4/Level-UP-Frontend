@@ -2,17 +2,6 @@
 CSS LOGIN CON PALETA DE COLORES UNIFICADA
 ======================================= */
 
-/* --- Variables y Estilos Base --- */
-:root {
-    --color-principal: #1E90FF;
-    --color-secundario: #39FF14;
-    --color-texto: #D3D3D3;
-    --color-fondo: #000000;
-    --color-fondo-oscuro: #2c2c2c;
-    --color-fondo-claro: #1a1a1a;
-    --color-error: #ff4d4d;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -37,11 +26,6 @@ CSS LOGIN CON PALETA DE COLORES UNIFICADA
     width: 100%;
     max-width: 400px;
     min-height: 480px;
-    background-color: var(--color-fondo-claro);
-    border: 1px solid var(--color-fondo-oscuro);
-    border-radius: 20px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
 }
 
 /* --- Tipografía --- */
@@ -99,8 +83,22 @@ form a.forgot {
     justify-content: center;
     flex-direction: column;
     height: 100%;
+    gap: 15px;
+    padding: 20px;
 }
 
+/* Title and subtitle positioning */
+.auth-container h1 {
+    margin: 10px 0 5px 0;
+    order: 2;
+}
+
+.auth-container span {
+    margin: 0 0 10px 0;
+    order: 3;
+}
+
+/* Input positioning */
 .auth-container input {
     background-color: var(--color-fondo-oscuro);
     border: 1px solid #444;
@@ -112,18 +110,22 @@ form a.forgot {
     width: 100%;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
+    order: 1;
 }
 
 .auth-container input::placeholder {
     color: #888;
 }
 
+/* Error message positioning */
 .form-message {
     color: var(--color-error);
     font-size: 14px;
     text-align: center;
     height: 20px;
     margin-bottom: 10px;
+    order: 5;
+    margin: 10px 0;
 }
 
 .form-message.success {
@@ -144,6 +146,33 @@ form a.forgot {
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.3s, box-shadow 0.3s;
+    order: 4;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+    .auth-container form {
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .auth-container h1 {
+        font-size: 24px;
+        margin: 8px 0 3px 0;
+    }
+
+    .auth-container span {
+        font-size: 11px;
+        margin: 0 0 8px 0;
+    }
+
+    .auth-container input {
+        margin: 0;
+    }
+
+    .auth-container button {
+        margin-top: 8px;
+    }
 }
 
 .auth-container button:hover {

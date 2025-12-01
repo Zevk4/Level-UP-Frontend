@@ -5,7 +5,10 @@
       "types/*": ["types/*"],
       "data/*": ["data/*"],
       "context/*": ["context/*"],
-      "components/*": ["components/*"]
+      "components/*": ["components/*"],
+      "hooks/*": ["hooks/*"],
+      "pages/*": ["pages/*"],
+      "services/*": ["services/*"]
       
     },
     "target": "es5",

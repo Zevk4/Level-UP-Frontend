@@ -2,7 +2,7 @@ import React from 'react';
 import { Carousel } from 'react-bootstrap';
 
 // 1. Importar nuestro nuevo hook
-import useWindowSize from '../../hooks/useWindowSize';
+import useWindowSize from 'hooks/useWindowSize';
 
 // Importar el CSS
 import './Reviews.css';
@@ -12,7 +12,7 @@ const MOBILE_BREAKPOINT = 992;
 
 const Reviews: React.FC = () => {
   // 3. Obtener el ancho de la ventana
-  const { width } = useWindowSize();
+  const { width = 0 } = useWindowSize();
   const isMobile = width < MOBILE_BREAKPOINT;
 
   // Creamos un array con los datos de las reviews

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
-import Button from '../ui/Button';
+import LoginForm from 'components/auth/LoginForm';
+import RegisterForm from 'components/auth/RegisterForm';
+import Button from 'components/ui/Button';
 import styles from './AuthLayout.module.css';
 
 export default function AuthLayout() {

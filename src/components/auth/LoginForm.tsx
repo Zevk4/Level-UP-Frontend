@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import { useModal } from '../../context/ModalContext';
-import { AuthContextType } from '../../types/index';
-import { useForm } from '../../hooks/useForm';
-import Input from '../ui/Input';
-import Button from '../ui/Button';
+import { AuthContext } from 'context/AuthContext';
+import { useModal } from 'context/ModalContext';
+import { AuthContextType } from 'types';
+import { useForm } from 'hooks/useForm';
+import Input from 'components/ui/Input';
+import Button from 'components/ui/Button';
 import styles from './LoginForm.module.css';
 
 const LoginForm: React.FC = () => {
