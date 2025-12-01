@@ -26,6 +26,15 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
     }
   }, [categoryToEdit]);
 
+  useEffect(() => {
+    if (title.trim()) {
+      const generatedLink = `/category?cat=${encodeURIComponent(title.trim())}`;
+      setLink(generatedLink);
+    } else {
+      setLink('');
+    }
+  }, [title]); // Depende de los cambios en el título
+
   const handleAddSubcategory = () => {
     if (newSubcategoryName.trim() && newSubcategoryLink.trim()) {
       setSubcategories([...subcategories, { name: newSubcategoryName.trim(), link: newSubcategoryLink.trim() }]);
@@ -80,7 +89,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
         {/* Enlace de la Categoría */}
         <div>
           <label htmlFor="categoryLink" className="block mb-1 font-medium text-white">Enlace</label>
-          <input type="text" id="categoryLink" value={link} onChange={(e) => setLink(e.target.value)} required
+          <input type="text" id="categoryLink" value={link} readOnly required
             className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500 text-white" />
         </div>
 

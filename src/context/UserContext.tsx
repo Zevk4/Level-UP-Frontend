@@ -37,12 +37,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (storedUsers) {
         setUsers(storedUsers);
       } else {
-        setUsers(usersData);
-        storageService.local.set('users', usersData);
+        setUsers(usersData as User[]);
+        storageService.local.set('users', usersData as User[]);
       }
     } catch (error) {
       console.error('Error al cargar usuarios:', error);
-      setUsers(usersData);
+      setUsers(usersData as User[]);
     } finally {
       setLoading(false);
     }
