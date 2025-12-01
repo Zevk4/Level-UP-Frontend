@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ProductForm from './ProductForm';
 import TopProducts from './TopProducts'; // Mantener TopProducts como una vista secundaria si es relevante
 import { useProducts } from '../../context/ProductContext';
@@ -7,9 +7,11 @@ import { Product } from '../../types';
 const ProductManagementPanel: React.FC = () => {
   const { products, addProduct, deleteProduct, updateProduct } = useProducts(); // Asumimos que ProductContext tendrá deleteProduct y updateProduct
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null); // Ref para el scroll
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
+    panelRef.current?.scrollIntoView({ behavior: 'smooth' }); // Scroll al editar
   };
 
   const handleDelete = (productId: string) => {
@@ -28,7 +30,7 @@ const ProductManagementPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6" ref={panelRef}>
       <div className="flex-1 space-y-6">
         <ProductForm onAddProduct={handleFormSubmit} productToEdit={editingProduct} /> {/* Pasar producto para edición */}
         

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCategories } from '../../context/CategoryContext';
 import { Category } from '../../types';
 import CategoryForm from './CategoryForm';
@@ -6,6 +6,7 @@ import CategoryForm from './CategoryForm';
 const CategoryManagementPanel: React.FC = () => {
   const { categories, addCategory, updateCategory, deleteCategory, addSubcategory, updateSubcategory, deleteSubcategory } = useCategories();
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null); // Ref para el scroll
 
   const handleSaveCategory = (category: Category) => {
     // Aquí la lógica para determinar si es add o update es más compleja
@@ -26,6 +27,7 @@ const CategoryManagementPanel: React.FC = () => {
 
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
+    panelRef.current?.scrollIntoView({ behavior: 'smooth' }); // Scroll al editar
   };
 
   const handleDelete = (categoryTitle: string) => {
@@ -47,7 +49,7 @@ const CategoryManagementPanel: React.FC = () => {
 
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6" ref={panelRef}>
       <div className="flex-1 space-y-6">
         <CategoryForm onSaveCategory={handleSaveCategory} categoryToEdit={editingCategory} />
 

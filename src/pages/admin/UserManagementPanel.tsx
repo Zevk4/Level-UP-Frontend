@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useUsers } from '../../context/UserContext';
 import { User } from '../../types';
 import UserForm from './UserForm';
@@ -6,6 +6,7 @@ import UserForm from './UserForm';
 const UserManagementPanel: React.FC = () => {
   const { users, addUser, updateUser, deleteUser } = useUsers();
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null); // Ref para el scroll
 
   const handleSaveUser = (user: User) => {
     if (user.id) {
@@ -18,6 +19,7 @@ const UserManagementPanel: React.FC = () => {
 
   const handleEdit = (user: User) => {
     setEditingUser(user);
+    panelRef.current?.scrollIntoView({ behavior: 'smooth' }); // Scroll al editar
   };
 
   const handleDelete = (userId: number) => {
@@ -27,7 +29,7 @@ const UserManagementPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6" ref={panelRef}>
       <div className="flex-1 space-y-6">
         <UserForm onSaveUser={handleSaveUser} userToEdit={editingUser} />
 
