@@ -31,10 +31,9 @@ const CategoryList: React.FC<{ onLinkClick: () => void }> = ({ onLinkClick }) =>
             </Link>
             <ul>
               {cat.subcategories.map((sub) => (
-                <li key={sub.name}>
-                  <Link to={sub.link} onClick={onLinkClick}>{sub.name}</Link>
-                </li>
-              ))}
+                                  <li key={sub.name}>
+                                    <Link to={sub.link} onClick={onLinkClick}>{sub.name}</Link>
+                                  </li>              ))}
             </ul>
           </div>
         ))}
