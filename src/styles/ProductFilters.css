@@ -1,7 +1,9 @@
 .product-filters-sidebar {
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-fondo-claro);
+  color: var(--color-texto);
+  box-shadow: 0 2px 4px rgba(0, 255, 20, 0.4); /* Neon green glow */
 }
 
 .filters-header {
@@ -9,20 +11,20 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid rgba(30, 144, 255, 0.3); /* Electric blue subtle border */
   padding-bottom: 10px;
 }
 
 .filters-header h5 {
   margin: 0;
   font-size: 1.25rem;
-  color: inherit; /* Inherit color from parent (text-light) */
+  color: var(--color-texto);
 }
 
 .clear-filters-btn {
   background: none;
   border: none;
-  color: inherit; /* Inherit color from parent (text-light) */
+  color: var(--color-principal); /* Electric blue for the button */
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0;
@@ -30,6 +32,7 @@
 
 .clear-filters-btn:hover {
   text-decoration: underline;
+  text-decoration-color: var(--color-principal);
 }
 
 .filter-section {
@@ -38,22 +41,44 @@
 
 .filter-section h6 {
   font-size: 1rem;
-  color: inherit; /* Inherit color from parent (text-light) */
+  color: var(--color-texto);
   margin-bottom: 10px;
-  border-bottom: 1px solid #dee2e6;
+  /* Removed border-bottom here as it's now part of filter-section-toggle for clickability */
   padding-bottom: 5px;
 }
 
+.filter-section-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(30, 144, 255, 0.3); /* Electric blue subtle border */
+  padding-bottom: 5px;
+  margin-bottom: 10px; /* Adjust margin to maintain spacing */
+}
+
+.toggle-icon {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--color-texto); /* Arrow pointing down */
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+
+.toggle-icon.open {
+  transform: rotate(180deg); /* Arrow pointing up when open */
+}
 
 .filter-options label {
-  /* No need for display: flex; align-items: center; margin-bottom: 8px; color: #212529; here anymore */
   font-size: 0.95rem;
   cursor: pointer;
 }
 
 .filter-options input[type="checkbox"] {
   margin-right: 10px;
-  accent-color: #007bff; /* Highlight checkbox with primary color */
+  accent-color: var(--color-principal); /* Highlight checkbox with principal color */
 }
 
 /* Responsive adjustments */
@@ -64,10 +89,8 @@
     width: 100%;
   }
 
-  /* For mobile, you might want an accordion-like behavior */
-  /* This is a basic example, full accordion would require JS */
   .filter-section {
-    border: 1px solid #dee2e6;
+    border: 1px solid rgba(30, 144, 255, 0.3); /* Electric blue subtle border */
     border-radius: 5px;
     margin-bottom: 10px;
   }
@@ -76,13 +99,14 @@
     padding: 10px 15px;
     margin: 0;
     cursor: pointer;
-    background-color: #e9ecef;
+    background-color: var(--color-fondo-oscuro);
     border-bottom: none;
   }
 
   .filter-options {
     padding: 10px 15px;
-    background-color: #ffffff;
-    border-top: 1px solid #dee2e6;
+    background-color: var(--color-fondo-claro);
+    border-top: 1px solid rgba(30, 144, 255, 0.3); /* Electric blue subtle border */
   }
 }
+

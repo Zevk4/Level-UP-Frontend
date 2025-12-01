@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Product } from '../../types'; // Assuming Product type is defined here
-import '../../styles/ProductFilters.css'; // Make sure to create this CSS file
+import { Product } from '../../types';
+import '../../styles/ProductFilters.css';
 
 interface ProductFiltersProps {
   products: Product[];
@@ -47,6 +47,11 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     initialFilters?.priceRanges || []
   );
 
+  // States for accordion-like behavior
+  const [isBrandSectionOpen, setIsBrandSectionOpen] = useState(true);
+  const [isCategorySectionOpen, setIsCategorySectionOpen] = useState(true);
+  const [isPriceSectionOpen, setIsPriceSectionOpen] = useState(true);
+
   const availableBrands = useMemo(() => {
     const brands = new Set<string>();
     products.forEach((product) => brands.add(product.marca));
@@ -92,94 +97,109 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   }, []);
 
   return (
-    <div className="product-filters-sidebar text-light bg-dark-subtle p-3">
+    <div className="product-filters-sidebar p-3">
       <div className="filters-header">
         <h5>Filtros</h5>
-        <button className="clear-filters-btn text-light" onClick={clearFilters}>
+        <button className="clear-filters-btn" onClick={clearFilters}>
           Limpiar Filtros
         </button>
       </div>
 
       <div className="filter-section">
-        <h6>Marca</h6>
-        <div className="filter-options d-flex flex-column">
-          <div className="d-flex align-items-center mb-2">
-            <input
-              type="checkbox"
-              checked={selectedBrands.length === 0}
-              onChange={() => setSelectedBrands([])}
-              id="brand-all"
-            />
-            <label htmlFor="brand-all" className="ms-2 mb-0">Todas</label>
-          </div>
-          {availableBrands.map((brand) => (
-            <div key={brand} className="d-flex align-items-center mb-2">
+        <h6 className="filter-section-toggle" onClick={() => setIsBrandSectionOpen(!isBrandSectionOpen)}>
+          Marca
+          <span className={`toggle-icon ${isBrandSectionOpen ? 'open' : ''}`}></span>
+        </h6>
+        {isBrandSectionOpen && (
+          <div className="filter-options d-flex flex-column">
+            <div className="d-flex align-items-center mb-2">
               <input
                 type="checkbox"
-                checked={selectedBrands.includes(brand)}
-                onChange={() => handleBrandChange(brand)}
-                id={`brand-${brand}`}
+                checked={selectedBrands.length === 0}
+                onChange={() => setSelectedBrands([])}
+                id="brand-all"
               />
-              <label htmlFor={`brand-${brand}`} className="ms-2 mb-0">{brand}</label>
+              <label htmlFor="brand-all" className="ms-2 mb-0">Todas</label>
             </div>
-          ))}
-        </div>
+            {availableBrands.map((brand) => (
+              <div key={brand} className="d-flex align-items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={selectedBrands.includes(brand)}
+                  onChange={() => handleBrandChange(brand)}
+                  id={`brand-${brand}`}
+                />
+                <label htmlFor={`brand-${brand}`} className="ms-2 mb-0">{brand}</label>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="filter-section">
-        <h6>Categoría</h6>
-        <div className="filter-options d-flex flex-column">
-          <div className="d-flex align-items-center mb-2">
-            <input
-              type="checkbox"
-              checked={selectedCategories.length === 0}
-              onChange={() => setSelectedCategories([])}
-              id="category-all"
-            />
-            <label htmlFor="category-all" className="ms-2 mb-0">Todas</label>
-          </div>
-          {CATEGORIES.map((category) => (
-            <div key={category} className="d-flex align-items-center mb-2">
+        <h6 className="filter-section-toggle" onClick={() => setIsCategorySectionOpen(!isCategorySectionOpen)}>
+          Categoría
+          <span className={`toggle-icon ${isCategorySectionOpen ? 'open' : ''}`}></span>
+        </h6>
+        {isCategorySectionOpen && (
+          <div className="filter-options d-flex flex-column">
+            <div className="d-flex align-items-center mb-2">
               <input
                 type="checkbox"
-                checked={selectedCategories.includes(category)}
-                onChange={() => handleCategoryChange(category)}
-                id={`category-${category}`}
+                checked={selectedCategories.length === 0}
+                onChange={() => setSelectedCategories([])}
+                id="category-all"
               />
-              <label htmlFor={`category-${category}`} className="ms-2 mb-0">{category}</label>
+              <label htmlFor="category-all" className="ms-2 mb-0">Todas</label>
             </div>
-          ))}
-        </div>
+            {CATEGORIES.map((category) => (
+              <div key={category} className="d-flex align-items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => handleCategoryChange(category)}
+                  id={`category-${category}`}
+                />
+                <label htmlFor={`category-${category}`} className="ms-2 mb-0">{category}</label>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="filter-section">
-        <h6>Precio</h6>
-        <div className="filter-options d-flex flex-column">
-          <div className="d-flex align-items-center mb-2">
-            <input
-              type="checkbox"
-              checked={selectedPriceRanges.length === 0}
-              onChange={() => setSelectedPriceRanges([])}
-              id="price-all"
-            />
-            <label htmlFor="price-all" className="ms-2 mb-0">Todos</label>
-          </div>
-          {Object.keys(PRICE_RANGES).map((rangeKey) => (
-            <div key={rangeKey} className="d-flex align-items-center mb-2">
+        <h6 className="filter-section-toggle" onClick={() => setIsPriceSectionOpen(!isPriceSectionOpen)}>
+          Precio
+          <span className={`toggle-icon ${isPriceSectionOpen ? 'open' : ''}`}></span>
+        </h6>
+        {isPriceSectionOpen && (
+          <div className="filter-options d-flex flex-column">
+            <div className="d-flex align-items-center mb-2">
               <input
                 type="checkbox"
-                checked={selectedPriceRanges.includes(rangeKey)}
-                onChange={() => handlePriceRangeChange(rangeKey)}
-                id={`price-${rangeKey}`}
+                checked={selectedPriceRanges.length === 0}
+                onChange={() => setSelectedPriceRanges([])}
+                id="price-all"
               />
-              <label htmlFor={`price-${rangeKey}`} className="ms-2 mb-0">
-                {rangeKey === '0-50000' && '$0 - $50.000'}
-                {rangeKey === '50001-200000' && '$50.001 - $200.000'}
-                {rangeKey === '200001-max' && '$200.000+'}
-              </label>
+              <label htmlFor="price-all" className="ms-2 mb-0">Todos</label>
             </div>
-          ))}
-        </div>
+            {Object.keys(PRICE_RANGES).map((rangeKey) => (
+              <div key={rangeKey} className="d-flex align-items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={selectedPriceRanges.includes(rangeKey)}
+                  onChange={() => handlePriceRangeChange(rangeKey)}
+                  id={`price-${rangeKey}`}
+                />
+                <label htmlFor={`price-${rangeKey}`} className="ms-2 mb-0">
+                  {rangeKey === '0-50000' && '$0 - $50.000'}
+                  {rangeKey === '50001-200000' && '$50.001 - $200.000'}
+                  {rangeKey === '200001-max' && '$200.000+'}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
