@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Category } from 'types';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import categoriasData from 'data/categorias.json'; // Cambiado de menuData
 import { storageService } from 'services/storageService'; // Importar storageService
 

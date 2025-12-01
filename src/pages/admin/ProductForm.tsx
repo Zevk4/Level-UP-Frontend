@@ -1,7 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { Product, Category } from '../../types'; // Import Category type
 import { useProducts } from '../../context/ProductContext';
-import categoriasData from '../../data/categorias.json'; // Import dynamic categories data
+import { useCategories } from '../../context/CategoryContext'; // Importar useCategories
+
 
 interface ProductFormProps {
   onAddProduct: (product: Product) => void;
@@ -19,7 +20,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
   const [preview, setPreview] = useState<string | null>(null);
   const [message, setMessage] = useState('');
 
-  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<string[]>([]);
 
   // States for new category/subcategory inputs
@@ -27,6 +27,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
 
   const { products } = useProducts();
+  const { categories: allCategories, addCategory, addSubcategory } = useCategories(); // Usar categorías del contexto y funciones de adición
 
   const resetForm = () => {
     setNombre('');
@@ -70,7 +71,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
         link: `/category?cat=${encodeURIComponent(newCategoryName.trim())}`,
         subcategories: []
       };
-      setAllCategories(prev => [...prev, newCat]);
+      addCategory(newCat); // Usar la función del contexto
       setNewCategoryName('');
       setMessage(`Categoría "${newCategoryName.trim()}" agregada.`);
     } else {
@@ -81,22 +82,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
   // Function to add a new subcategory to the selected category
   const handleAddNewSubcategory = () => {
     if (newSubcategoryName.trim() && categoria) {
-      setAllCategories(prevCategories => {
-        return prevCategories.map(cat => {
-          if (cat.title === categoria) {
-            if (!cat.subcategories.some(sub => sub.name.toLowerCase() === newSubcategoryName.trim().toLowerCase())) {
-              const newSub = {
-                name: newSubcategoryName.trim(),
-                link: `/category?cat=${encodeURIComponent(categoria)}&sub=${encodeURIComponent(newSubcategoryName.trim())}`
-              };
-              // Update subcategoriasDisponibles immediately
-              setSubcategoriasDisponibles(prev => [...prev, newSub.name]);
-              return { ...cat, subcategories: [...cat.subcategories, newSub] };
-            }
-          }
-          return cat;
-        });
-      });
+      // Usar la función del contexto para añadir subcategoría
+      addSubcategory(
+        categoria,
+        {
+          name: newSubcategoryName.trim(),
+          link: `/category?cat=${encodeURIComponent(categoria)}&sub=${encodeURIComponent(newSubcategoryName.trim())}`
+        }
+      );
       setNewSubcategoryName('');
       setMessage(`Subcategoría "${newSubcategoryName.trim()}" agregada a "${categoria}".`);
     } else {
