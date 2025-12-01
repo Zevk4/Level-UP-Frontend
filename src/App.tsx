@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
 import ScrollToTop from './components/utils/ScrollToTop';
 import CartDrawer from './components/cart/CartDrawer';
+import MainLayout from './components/layout/MainLayout';
 
 // Páginas
 import HomePage from './pages/HomePage';
@@ -20,33 +19,28 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Header />
+      
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/category" element={<CategoryPage />} />
+          <Route path="/product/:codigo" element={<ProductDetailPage />} />
+          <Route path="/products" element={<AllProductsPage />} />
+          <Route path="/search" element={<SearchPage />} />
+        </Route>
 
-        <main className="container my-4" style={{ flexGrow: 1, padding: '0 20px', maxWidth: '100%' }}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/category" element={<CategoryPage />} />
-            <Route path="/product/:codigo" element={<ProductDetailPage />} />
-            <Route path="/products" element={<AllProductsPage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-            <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<AdminPage />} />
-            </Route>
+        <Route element={<MainLayout />}>
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminPage />} />
+          </Route>
+        </Route>
 
-            <Route path="*" element={<h1>404 | Página no encontrada</h1>} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </div>
+        <Route path="*" element={<h1>404 | Página no encontrada</h1>} />
+      </Routes>
 
       <CartDrawer />
-
-      {/* Renderizar LoginPage globalmente para que el modal pueda mostrarse desde cualquier parte mediante ModalContext */}
-      <LoginPage />
     </Router>
   );
 };

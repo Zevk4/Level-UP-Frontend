@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from 'context/AuthContext';
-import { useModal } from 'context/ModalContext';
 import { AuthContextType } from 'types';
 import { useForm } from 'hooks/useForm';
 import Input from 'components/ui/Input';
@@ -12,8 +11,6 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
 
   const { login } = useContext(AuthContext) as AuthContextType;
-
-  const { closeLoginModal } = useModal();
 
   const [authError, setAuthError] = useState<string>('');
 
@@ -30,8 +27,6 @@ const LoginForm: React.FC = () => {
       const result = login(values.email, values.password);
 
       if (result.success && result.user) {
-        closeLoginModal();
-
         if (result.user.role === 'admin') {
           navigate('/admin');
         } else {

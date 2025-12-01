@@ -6,11 +6,12 @@ CSS LOGIN CON PALETA DE COLORES UNIFICADA
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
 }
 
 /* --- Contenedor Principal --- */
 .auth-container {
-    position: relative;
+    position: absolute; /* Cambio clave */
     width: 100%;
     max-width: 400px;
     min-height: 480px;
@@ -19,6 +20,10 @@ CSS LOGIN CON PALETA DE COLORES UNIFICADA
     border-radius: 20px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10; /* Para asegurar que flote SOBRE el fondo */
 }
 
 .container {
@@ -47,7 +52,7 @@ p {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.3px;
-    margin: 20px 0;
+    margin: 5px 0;
 }
 
 .mobile-toggle-text a {
@@ -90,12 +95,12 @@ form a.forgot {
 /* Title and subtitle positioning */
 .auth-container h1 {
     margin: 10px 0 5px 0;
-    order: 2;
+    order: -5;
 }
 
 .auth-container span {
     margin: 0 0 10px 0;
-    order: 3;
+    order: -4;
 }
 
 /* Input positioning */
@@ -110,7 +115,7 @@ form a.forgot {
     width: 100%;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
-    order: 1;
+    order: -3 !important;
 }
 
 .auth-container input::placeholder {
@@ -124,7 +129,7 @@ form a.forgot {
     text-align: center;
     height: 20px;
     margin-bottom: 10px;
-    order: 5;
+    order: -2;
     margin: 10px 0;
 }
 
@@ -146,7 +151,7 @@ form a.forgot {
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.3s, box-shadow 0.3s;
-    order: 4;
+    order: 5;
 }
 
 /* Mobile adjustments */
