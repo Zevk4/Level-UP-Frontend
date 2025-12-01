@@ -114,13 +114,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
           <label className="block mb-1 font-medium text-white">Subcategorías</label>
           <div className="space-y-2">
             {subcategories.map((sub, index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index} className="flex flex-col sm:flex-row items-center sm:items-stretch gap-2">
                 <input type="text" value={sub.name} readOnly
-                  className="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-700 text-white" />
+                  className="w-full sm:flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-700 text-white" />
                 <input type="text" value={sub.link} readOnly
-                  className="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-700 text-white" />
+                  className="w-full sm:flex-1 px-3 py-2 rounded-md border border-gray-600 bg-gray-700 text-white" />
                 <button type="button" onClick={() => handleRemoveSubcategory(index)}
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded text-sm">
+                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded text-sm">
                   -
                 </button>
               </div>
