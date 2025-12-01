@@ -39,10 +39,7 @@ const AdminPage: React.FC = () => {
             <div className="flex items-center gap-4">
               {/* Original Logo and Title for md screens and above */}
               <img src="/Icon_Level_UP_Basico.png" alt="Logo" className="h-12 hidden md:block" />
-              <h1 className="text-2xl font-bold hidden md:block">Panel de Administración</h1>
-
-              {/* Compact Logo for small screens */}
-              <img src="/Icon_Level_UP_Basico.png" alt="Admin Logo" className="h-8 block md:hidden" />
+              <h1 className="text-2xl font-bold">Panel de Administración</h1>
             </div>
           </header> {/* <-- Esta era la etiqueta que faltaba */}
     
