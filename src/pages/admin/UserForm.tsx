@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { User } from '../../types';
+import { useUsers } from '../../context/UserContext'; // Importar useUsers
 
 interface UserFormProps {
   onSaveUser: (user: User) => void;
@@ -12,6 +13,8 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'admin' | 'vendedor' | 'cliente'>('cliente');
   const [message, setMessage] = useState('');
+
+  const { users } = useUsers(); // Obtener usuarios del contexto
 
   const resetForm = () => {
     setNombre('');
@@ -37,6 +40,17 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
     if (!nombre || !email || !password || !role) {
       setMessage('Todos los campos obligatorios deben completarse.');
       return;
+    }
+
+    // Validación de email duplicado
+    if (!userToEdit || (userToEdit && userToEdit.email !== email)) {
+      const isDuplicate = users.some(
+        (u) => u.email.toLowerCase() === email.trim().toLowerCase()
+      );
+      if (isDuplicate) {
+        setMessage('Ya existe un usuario con este correo electrónico.');
+        return;
+      }
     }
 
     const userToSubmit: User = {

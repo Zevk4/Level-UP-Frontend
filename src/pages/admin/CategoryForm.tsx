@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { Category } from '../../types';
+import { useCategories } from '../../context/CategoryContext'; // Importar useCategories
 
 interface CategoryFormProps {
   onSaveCategory: (category: Category) => void;
@@ -13,6 +14,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
   const [newSubcategoryLink, setNewSubcategoryLink] = useState('');
   const [message, setMessage] = useState('');
+
+  const { categories } = useCategories(); // Obtener categorías del contexto
 
   const resetForm = () => {
     setTitle('');
@@ -52,13 +55,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
   }, [newSubcategoryName, title]); // Depende del nombre de la subcategoría y el título de la categoría
   
   const handleAddSubcategory = () => {
-    if (newSubcategoryName.trim() && newSubcategoryLink.trim()) {
-      setSubcategories([...subcategories, { name: newSubcategoryName.trim(), link: newSubcategoryLink.trim() }]);
-      setNewSubcategoryName('');
-      setNewSubcategoryLink('');
-    } else {
+    if (!newSubcategoryName.trim() || !newSubcategoryLink.trim()) {
       setMessage('El nombre y el enlace de la subcategoría no pueden estar vacíos.');
+      return;
     }
+
+    const isSubcategoryDuplicate = subcategories.some(
+      (sub) => sub.name.toLowerCase() === newSubcategoryName.trim().toLowerCase()
+    );
+    if (isSubcategoryDuplicate) {
+      setMessage('Ya existe una subcategoría con este nombre.');
+      return;
+    }
+
+    setSubcategories([...subcategories, { name: newSubcategoryName.trim(), link: newSubcategoryLink.trim() }]);
+    setNewSubcategoryName('');
+    setNewSubcategoryLink('');
   };
 
   const handleRemoveSubcategory = (index: number) => {
@@ -71,6 +83,17 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSaveCategory, categoryToE
     if (!title.trim() || !link.trim()) {
       setMessage('El título y el enlace de la categoría no pueden estar vacíos.');
       return;
+    }
+
+    // Validación de categoría duplicada
+    if (!categoryToEdit || (categoryToEdit && categoryToEdit.title !== title)) {
+      const isDuplicate = categories.some(
+        (cat) => cat.title.toLowerCase() === title.trim().toLowerCase()
+      );
+      if (isDuplicate) {
+        setMessage('Ya existe una categoría con este nombre.');
+        return;
+      }
     }
 
     const categoryToSubmit: Category = {
