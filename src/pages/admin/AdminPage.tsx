@@ -37,8 +37,12 @@ const AdminPage: React.FC = () => {
           {/* 'bg-gray-800' usará tu 'fondo-oscuro' gracias al config. */}
           <header className="bg-gray-800 shadow p-4 flex items-center justify-start mb-6">
             <div className="flex items-center gap-4">
+              {/* Original Logo and Title for md screens and above */}
               <img src="/Icon_Level_UP_Basico.png" alt="Logo" className="h-12 hidden md:block" />
-              <h1 className="text-2xl font-bold">Panel de Administración</h1>
+              <h1 className="text-2xl font-bold hidden md:block">Panel de Administración</h1>
+
+              {/* Compact Logo for small screens */}
+              <img src="/Icon_Level_UP_Basico.png" alt="Admin Logo" className="h-8 block md:hidden" />
             </div>
           </header> {/* <-- Esta era la etiqueta que faltaba */}
     
