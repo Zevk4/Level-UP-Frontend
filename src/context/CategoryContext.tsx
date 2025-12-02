@@ -1,19 +1,22 @@
-import { Category } from 'types';
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import categoriasData from 'data/categorias.json'; // Cambiado de menuData
-import { storageService } from 'services/storageService'; // Importar storageService
+import { apiService } from '../services/apiService'; // Ajusta la ruta si es necesario
+import { Category, Subcategory } from '../types'; // Importamos los tipos correctos
 
 interface CategoryContextType {
   categories: Category[];
   loading: boolean;
   error: string | null;
-  refreshCategories: () => Promise<void>; // Función para recargar categorías
-  addCategory: (newCategory: Category) => void;
-  updateCategory: (updatedCategory: Category) => void;
-  deleteCategory: (categoryTitle: string) => void;
-  addSubcategory: (categoryTitle: string, newSubcategory: { name: string; link: string }) => void;
-  updateSubcategory: (categoryTitle: string, oldSubcategoryName: string, updatedSubcategory: { name: string; link: string }) => void;
-  deleteSubcategory: (categoryTitle: string, subcategoryName: string) => void;
+  refreshCategories: () => Promise<void>;
+  addCategory: (newCategory: Category) => Promise<void>;
+  
+  // CAMBIO: id ahora es number
+  updateCategory: (id: number, updatedCategory: Category) => Promise<void>;
+  deleteCategory: (id: number) => Promise<void>;
+  
+  // CAMBIO: categoryId es number y usamos el tipo Subcategory
+  addSubcategory: (categoryId: number, newSubcategory: Subcategory) => Promise<void>;
+  updateSubcategory: (categoryId: number, oldSubcategoryName: string, updatedSubcategory: Subcategory) => Promise<void>;
+  deleteSubcategory: (categoryId: number, subcategoryName: string) => Promise<void>;
 }
 
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
@@ -31,14 +34,8 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
     setLoading(true);
     setError(null);
     try {
-      const storedCategories = storageService.local.get<Category[]>('categories');
-      if (storedCategories && storedCategories.length > 0) {
-        setCategories(storedCategories);
-      } else {
-        const data: Category[] = categoriasData as Category[];
-        setCategories(data);
-        storageService.local.set('categories', data);
-      }
+      const response = await apiService.get('/categories');
+      setCategories(response.data as Category[]);
     } catch (err) {
       console.error("Error fetching categories:", err);
       setError("Failed to fetch categories.");
@@ -56,96 +53,131 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
     await fetchCategories();
   };
 
-  const addCategory = (newCategory: Category) => {
+  const addCategory = async (newCategory: Category) => {
     try {
-      const updatedCategories = [...categories, newCategory];
-      setCategories(updatedCategories);
-      storageService.local.set('categories', updatedCategories);
+      // Preparamos el request (Spring Boot espera esto)
+      const request = {
+        title: newCategory.title,
+        link: newCategory.link,
+        subcategories: newCategory.subcategories
+      };
+      const response = await apiService.post('/categories/create', request);
+      // Agregamos la respuesta real del servidor (que incluye el nuevo ID)
+      setCategories(prev => [...prev, response.data as Category]);
     } catch (error) {
       console.error('Error al agregar categoría:', error);
+      throw error; // Lanzamos el error para que el componente lo pueda mostrar si quiere
     }
   };
 
-  const updateCategory = (updatedCategory: Category) => {
+  // CAMBIO: id es number
+  const updateCategory = async (id: number, updatedCategory: Category) => {
     try {
-      const updatedCategories = categories.map((cat) =>
-        cat.title === updatedCategory.title ? updatedCategory : cat
-      );
-      setCategories(updatedCategories);
-      storageService.local.set('categories', updatedCategories);
+      const request = {
+        title: updatedCategory.title,
+        link: updatedCategory.link,
+        subcategories: updatedCategory.subcategories
+      };
+      // La URL ahora usa el ID numérico
+      const response = await apiService.put(`/categories/${id}`, request);
+      
+      // Actualizamos el estado local comparando números
+      setCategories(prev => prev.map(cat => (cat.id === id ? response.data as Category : cat)));
     } catch (error) {
       console.error('Error al actualizar categoría:', error);
+      throw error;
     }
   };
 
-  const deleteCategory = (categoryTitle: string) => {
+  // CAMBIO: id es number
+  const deleteCategory = async (id: number) => {
     try {
-      const updatedCategories = categories.filter((cat) => cat.title !== categoryTitle);
-      setCategories(updatedCategories);
-      storageService.local.set('categories', updatedCategories);
+      await apiService.delete(`/categories/${id}`);
+      setCategories(prev => prev.filter(cat => cat.id !== id));
     } catch (error) {
       console.error('Error al eliminar categoría:', error);
+      throw error;
     }
   };
 
-  const addSubcategory = (categoryTitle: string, newSubcategory: { name: string; link: string }) => {
+  // -----------------------------------------------------------------------
+  // LÓGICA DE SUBCATEGORÍAS (Adaptada para usar updateCategory)
+  // -----------------------------------------------------------------------
+
+  const addSubcategory = async (categoryId: number, newSubcategory: Subcategory) => {
     try {
-      const updatedCategories = categories.map(cat => {
-        if (cat.title === categoryTitle) {
-          return {
-            ...cat,
-            subcategories: [...cat.subcategories, newSubcategory]
-          };
-        }
-        return cat;
-      });
-      setCategories(updatedCategories);
-      storageService.local.set('categories', updatedCategories);
+      const categoryToUpdate = categories.find(c => c.id === categoryId);
+      if (!categoryToUpdate) return;
+
+      // Creamos un objeto categoría actualizado agregando la subcategoría
+      const updatedCategory = {
+        ...categoryToUpdate,
+        subcategories: [...categoryToUpdate.subcategories, newSubcategory]
+      };
+
+      // Reutilizamos la función updateCategory
+      await updateCategory(categoryId, updatedCategory);
+
     } catch (error) {
       console.error('Error al agregar subcategoría:', error);
     }
   };
 
-  const updateSubcategory = (categoryTitle: string, oldSubcategoryName: string, updatedSubcategory: { name: string; link: string }) => {
+  const updateSubcategory = async (categoryId: number, oldSubcategoryName: string, updatedSubcategory: Subcategory) => {
     try {
-      const updatedCategories = categories.map(cat => {
-        if (cat.title === categoryTitle) {
-          return {
-            ...cat,
-            subcategories: cat.subcategories.map(sub =>
-              sub.name === oldSubcategoryName ? updatedSubcategory : sub
-            )
-          };
-        }
-        return cat;
-      });
-      setCategories(updatedCategories);
-      storageService.local.set('categories', updatedCategories);
+      const categoryToUpdate = categories.find(c => c.id === categoryId);
+      if (!categoryToUpdate) return;
+
+      // Mapeamos para reemplazar la subcategoría específica
+      const updatedSubs = categoryToUpdate.subcategories.map(sub => 
+        sub.name === oldSubcategoryName ? updatedSubcategory : sub
+      );
+
+      const updatedCategory = {
+        ...categoryToUpdate,
+        subcategories: updatedSubs
+      };
+
+      await updateCategory(categoryId, updatedCategory);
+
     } catch (error) {
       console.error('Error al actualizar subcategoría:', error);
     }
   };
 
-  const deleteSubcategory = (categoryTitle: string, subcategoryName: string) => {
+  const deleteSubcategory = async (categoryId: number, subcategoryName: string) => {
     try {
-      const updatedCategories = categories.map(cat => {
-        if (cat.title === categoryTitle) {
-          return {
-            ...cat,
-            subcategories: cat.subcategories.filter(sub => sub.name !== subcategoryName)
-          };
-        }
-        return cat;
-      });
-      setCategories(updatedCategories);
-      storageService.local.set('categories', updatedCategories);
+      const categoryToUpdate = categories.find(c => c.id === categoryId);
+      if (!categoryToUpdate) return;
+
+      // Filtramos para quitar la subcategoría
+      const updatedSubs = categoryToUpdate.subcategories.filter(sub => sub.name !== subcategoryName);
+
+      const updatedCategory = {
+        ...categoryToUpdate,
+        subcategories: updatedSubs
+      };
+
+      await updateCategory(categoryId, updatedCategory);
+
     } catch (error) {
       console.error('Error al eliminar subcategoría:', error);
     }
   };
 
   return (
-    <CategoryContext.Provider value={{ categories, loading, error, refreshCategories, addCategory, updateCategory, deleteCategory, addSubcategory, updateSubcategory, deleteSubcategory }}>
+    <CategoryContext.Provider value={{ 
+      categories, 
+      loading, 
+      error, 
+      refreshCategories, 
+      addCategory, 
+      updateCategory, 
+      deleteCategory, 
+      addSubcategory, 
+      updateSubcategory, 
+      deleteSubcategory 
+    }}>
       {children}
     </CategoryContext.Provider>
   );

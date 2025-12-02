@@ -19,15 +19,15 @@ const LoginForm: React.FC = () => {
     password: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
 
     if (validate()) {
-      const result = login(values.email, values.password);
+      const result = await login(values.email, values.password);
 
       if (result.success && result.user) {
-        if (result.user.role === 'admin') {
+        if (result.user.role === 'ADMIN') {
           navigate('/admin');
         } else {
           navigate('/');

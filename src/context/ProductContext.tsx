@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product } from 'types';
-import productosData from 'data/productos.json';
-import { storageService } from 'services/storageService'; // CAMBIO: Importar el servicio
+
+ 
+import { apiService } from 'services/apiService'; // CAMBIO: Importar el servicio
 
 // --- Definición del Contexto ---
 interface ProductContextType {
@@ -31,53 +32,61 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    try {
-      // CAMBIO: Usar storageService.local en lugar de sessionStorage
-      const storedProducts = storageService.local.get<Product[]>('products');
-      if (storedProducts) {
-        setProducts(storedProducts);
-      } else {
-        setProducts(productosData);
-        // CAMBIO: Usar storageService.local para guardar
-        storageService.local.set('products', productosData);
+    const loadProducts = async () => {
+      try {
+        const response = await apiService.get('/products');
+        setProducts(response.data as Product[]);
+      } catch (error) {
+        console.error('Error cargando productos:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error al cargar productos:', error);
-      setProducts(productosData);
-    } finally {
-      setLoading(false);
-    }
+    };
+    loadProducts();
   }, []);
 
-  const addProduct = (newProduct: Product) => {
+  const addProduct = async (newProduct: Product) => {
     try {
-      const updatedProducts = [newProduct, ...products];
-      setProducts(updatedProducts);
-      // CAMBIO: Usar storageService.local para guardar
-      storageService.local.set('products', updatedProducts);
+      const request = {
+        nombre: newProduct.nombre,
+        descripcion: newProduct.descripcion,
+        precio: newProduct.precio,
+        categoria: newProduct.categoria,
+        subcategoria: newProduct.subcategoria,
+        imagen: newProduct.imagen,
+        marca: newProduct.marca
+      };
+      const response = await apiService.post('/products/create', request);
+      setProducts(prev => [response.data as Product, ...prev]);
     } catch (error) {
-      console.error('Error al agregar producto:', error);
+      console.error('Error agregando producto:', error);
     }
   };
 
-  const updateProduct = (updatedProduct: Product) => {
+  const updateProduct = async (updatedProduct: Product) => {
     try {
-      const updatedProducts = products.map((prod) =>
-        prod.codigo === updatedProduct.codigo ? updatedProduct : prod
-      );
-      setProducts(updatedProducts);
-      storageService.local.set('products', updatedProducts);
+      const request = {
+        nombre: updatedProduct.nombre,
+        descripcion: updatedProduct.descripcion,
+        precio: updatedProduct.precio,
+        categoria: updatedProduct.categoria,
+        subcategoria: updatedProduct.subcategoria,
+        imagen: updatedProduct.imagen,
+        marca: updatedProduct.marca
+      };
+      const response = await apiService.put(`/products/${updatedProduct.codigo}`, request);
+      setProducts(prev => prev.map(prod =>
+        prod.codigo === updatedProduct.codigo ? response.data as Product : prod
+      ));
     } catch (error) {
       console.error('Error al actualizar producto:', error);
     }
   };
 
-  const deleteProduct = (productCode: string) => {
+  const deleteProduct = async (productCode: string) => {
     try {
-      const updatedProducts = products.filter((prod) => prod.codigo !== productCode);
-      setProducts(updatedProducts);
-      storageService.local.set('products', updatedProducts);
+      await apiService.delete(`/products/${productCode}`);
+      setProducts(prev => prev.filter(prod => prod.codigo !== productCode));
     } catch (error) {
       console.error('Error al eliminar producto:', error);
     }

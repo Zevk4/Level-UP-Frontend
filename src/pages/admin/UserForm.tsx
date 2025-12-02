@@ -1,26 +1,28 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { User } from '../../types';
-import { useUsers } from '../../context/UserContext'; // Importar useUsers
+import { useUsers } from '../../context/UserContext';
 
 interface UserFormProps {
   onSaveUser: (user: User) => void;
   userToEdit?: User | null;
+  // --- NUEVA PROP ---
+  onCancel?: () => void; 
 }
 
-const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
+const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit, onCancel }) => {
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'admin' | 'vendedor' | 'cliente'>('cliente');
+  const [role, setRole] = useState<'ADMIN' | 'VENDEDOR' | 'CLIENTE'>('CLIENTE');
   const [message, setMessage] = useState('');
 
-  const { users } = useUsers(); // Obtener usuarios del contexto
+  const { users } = useUsers();
 
   const resetForm = () => {
     setNombre('');
     setEmail('');
     setPassword('');
-    setRole('cliente');
+    setRole('CLIENTE');
     setMessage('');
   };
 
@@ -28,10 +30,10 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
     if (userToEdit) {
       setNombre(userToEdit.nombre);
       setEmail(userToEdit.email);
-      setPassword(userToEdit.password); // Considerar no pre-llenar contraseñas reales
+      setPassword(userToEdit.password);
       setRole(userToEdit.role);
     } else {
-      resetForm(); // Call resetForm when userToEdit is null
+      resetForm();
     }
   }, [userToEdit]);
 
@@ -54,7 +56,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
     }
 
     const userToSubmit: User = {
-      id: userToEdit ? userToEdit.id : 0, // ID se generará en el contexto si es nuevo
+      id: userToEdit ? userToEdit.id : 0,
       nombre,
       email,
       password,
@@ -62,11 +64,12 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
     };
 
     onSaveUser(userToSubmit);
+    
     if (!userToEdit) {
       setNombre('');
       setEmail('');
       setPassword('');
-      setRole('cliente');
+      setRole('CLIENTE');
       setMessage(`Usuario "${nombre}" agregado correctamente.`);
     } else {
       setMessage(`Usuario "${nombre}" actualizado correctamente.`);
@@ -75,7 +78,9 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-4">{userToEdit ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</h2>
+      <h2 className="text-xl font-semibold mb-4 text-white">
+        {userToEdit ? 'Editar Usuario' : 'Crear Nuevo Usuario'}
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* Nombre */}
@@ -102,24 +107,35 @@ const UserForm: React.FC<UserFormProps> = ({ onSaveUser, userToEdit }) => {
         {/* Rol */}
         <div>
           <label htmlFor="userRole" className="block mb-1 font-medium text-white">Rol</label>
-          <select id="userRole" value={role} onChange={(e) => setRole(e.target.value as "admin" | "vendedor" | "cliente")} required
+          <select id="userRole" value={role} onChange={(e) => setRole(e.target.value as "ADMIN" | "VENDEDOR" | "CLIENTE")} required
             className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500 text-white">
-            <option value="cliente">Cliente</option>
-            <option value="vendedor">Vendedor</option>
-            <option value="admin">Administrador</option>
+            <option value="CLIENTE">Cliente</option>
+            <option value="VENDEDOR">Vendedor</option>
+            <option value="ADMIN">Administrador</option>
           </select>
         </div>
 
-        {/* Botón de envío */}
+        {/* BOTONES DE ACCIÓN */}
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          {/* Botón Principal: Guardar / Crear */}
           <button type="submit"
             className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
             {userToEdit ? 'Guardar Cambios' : 'Crear Usuario'}
           </button>
-          <button type="button" onClick={resetForm}
-            className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
-            Limpiar Formulario
-          </button>
+          
+          {/* Botón Secundario: Cancelar Edición / Limpiar */}
+          {userToEdit ? (
+             <button type="button" onClick={onCancel}
+             className="flex-none bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md">
+             Cancelar Edición
+           </button>
+          ) : (
+            <button type="button" onClick={resetForm}
+              className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+              Limpiar Formulario
+            </button>
+          )}
+
         </div>
         {message && <p className="mt-2 text-sm text-white">{message}</p>}
       </form>

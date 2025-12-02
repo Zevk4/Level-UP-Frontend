@@ -6,20 +6,26 @@ import UserForm from './UserForm';
 const UserManagementPanel: React.FC = () => {
   const { users, addUser, updateUser, deleteUser } = useUsers();
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const panelRef = useRef<HTMLDivElement>(null); // Ref para el scroll
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  const handleSaveUser = (user: User) => {
+  const handleSaveUser = async (user: User) => {
+    // Nota: Es buena práctica hacerlo async/await si tus funciones de contexto lo son
     if (user.id) {
-      updateUser(user);
+      await updateUser(user);
     } else {
-      addUser(user);
+      await addUser(user);
     }
     setEditingUser(null);
   };
 
   const handleEdit = (user: User) => {
     setEditingUser(user);
-    panelRef.current?.scrollIntoView({ behavior: 'smooth' }); // Scroll al editar
+    panelRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // --- NUEVA FUNCIÓN: Cancelar Edición ---
+  const handleCancelEdit = () => {
+    setEditingUser(null); // Esto devuelve el formulario al modo "Crear"
   };
 
   const handleDelete = (userId: number) => {
@@ -31,7 +37,13 @@ const UserManagementPanel: React.FC = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6" ref={panelRef}>
       <div className="flex-1 space-y-6">
-        <UserForm onSaveUser={handleSaveUser} userToEdit={editingUser} />
+        
+        {/* PASAMOS LA NUEVA PROP 'onCancel' AL FORMULARIO */}
+        <UserForm 
+            onSaveUser={handleSaveUser} 
+            userToEdit={editingUser} 
+            onCancel={handleCancelEdit} // <--- AQUÍ
+        />
 
         <div className="bg-gray-800 rounded-lg shadow p-4 text-white">
           <h2 className="text-xl font-bold mb-4">Listado de Usuarios</h2>
@@ -58,11 +70,9 @@ const UserManagementPanel: React.FC = () => {
           </ul>
         </div>
       </div>
-      {/* Podríamos tener una sección lateral para estadísticas de usuario o algo similar */}
       <aside className="w-full lg:w-80 mt-6 lg:mt-0 p-4 bg-gray-800 rounded-lg text-white">
         <h3 className="text-lg font-bold mb-2">Información Adicional</h3>
         <p>Total de usuarios: {users.length}</p>
-        {/* Más contenido futuro */}
       </aside>
     </div>
   );

@@ -10,17 +10,18 @@ export default function RegisterForm() {
   const { values, errors, handleChange, validate, reset } = useForm({
     nombre: '',
     email: '',
-    password: ''
+    password: '',
+    role: 'CLIENTE'
   });
   const [message, setMessage] = useState<string>('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setMessage('');
 
     if (!validate()) return;
 
-    const result = register(values.nombre, values.email, values.password);
+    const result = await register(values.nombre, values.email, values.password, values.role);
     setMessage(result.message || '');
 
     if (result.success) {

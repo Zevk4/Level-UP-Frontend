@@ -1,12 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import { Product, Category } from '../../types'; // Import Category type
+import { Product, Category, Subcategory } from '../../types'; 
 import { useProducts } from '../../context/ProductContext';
-import { useCategories } from '../../context/CategoryContext'; // Importar useCategories
-
+import { useCategories } from '../../context/CategoryContext';
 
 interface ProductFormProps {
   onAddProduct: (product: Product) => void;
-  productToEdit?: Product | null; // Nuevo prop para edición
+  productToEdit?: Product | null;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }) => {
@@ -21,13 +20,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
   const [message, setMessage] = useState('');
 
   const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<string[]>([]);
-
-  // States for new category/subcategory inputs
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
 
   const { products } = useProducts();
-  const { categories: allCategories, addCategory, addSubcategory } = useCategories(); // Usar categorías del contexto y funciones de adición
+  const { categories: allCategories, addCategory, addSubcategory } = useCategories();
 
   const resetForm = () => {
     setNombre('');
@@ -44,56 +41,89 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
     setSubcategoriasDisponibles([]);
   };
 
-  // useEffect para pre-llenar el formulario si hay un producto para editar
+  // --- CORRECCIÓN 1: useEffect separado para INICIALIZAR el formulario ---
+  // Solo se ejecuta si cambia el producto a editar, NO cuando cambian las categorías.
   useEffect(() => {
     if (productToEdit) {
       setNombre(productToEdit.nombre);
       setDescripcion(productToEdit.descripcion);
       setPrecio(productToEdit.precio);
       setCategoria(productToEdit.categoria);
-      setSubcategoria(productToEdit.subcategoria);
+      // Nota: subcategoria se setea en el siguiente useEffect
       setImagenUrl(productToEdit.imagen);
       setMarca(productToEdit.marca);
       setPreview(productToEdit.imagen);
-      // Cargar subcategorías disponibles para la categoría del producto a editar
-      const selectedCategory = allCategories.find(c => c.title === productToEdit.categoria);
-      setSubcategoriasDisponibles(selectedCategory ? selectedCategory.subcategories.map(s => s.name) : []);
     } else {
-      resetForm(); // Llama a resetForm cuando productToEdit es null
+      resetForm();
     }
-  }, [productToEdit, allCategories]);
+    // QUITAMOS 'allCategories' de aquí para evitar el reseteo indeseado
+  }, [productToEdit]); 
 
-  // Function to add a new category
-  const handleAddNewCategory = () => {
+  // --- CORRECCIÓN 2: useEffect para ACTUALIZAR listas ---
+  // Se encarga de refrescar las subcategorías disponibles si agregas una nueva
+  // o si cargas el producto a editar.
+  useEffect(() => {
+    // Si tenemos una categoría seleccionada, buscamos sus subcategorías actualizadas
+    if (categoria) {
+        const selectedCategory = allCategories.find(c => c.title === categoria);
+        const subs = selectedCategory ? selectedCategory.subcategories.map(s => s.name) : [];
+        setSubcategoriasDisponibles(subs);
+        
+        // Si estamos editando, aseguramos que la subcategoría seleccionada se mantenga
+        if (productToEdit && productToEdit.categoria === categoria) {
+            setSubcategoria(productToEdit.subcategoria);
+        }
+    } else {
+        setSubcategoriasDisponibles([]);
+    }
+  }, [allCategories, categoria, productToEdit]);
+
+
+  const handleAddNewCategory = async () => {
     if (newCategoryName.trim() && !allCategories.some(cat => cat.title.toLowerCase() === newCategoryName.trim().toLowerCase())) {
-      const newCat: Category = {
-        title: newCategoryName.trim(),
-        link: `/category?cat=${encodeURIComponent(newCategoryName.trim())}`,
-        subcategories: []
-      };
-      addCategory(newCat); // Usar la función del contexto
-      setNewCategoryName('');
-      setMessage(`Categoría "${newCategoryName.trim()}" agregada.`);
+      try {
+        const newCat: Category = {
+            title: newCategoryName.trim(),
+            link: `/category?cat=${encodeURIComponent(newCategoryName.trim())}`,
+            subcategories: []
+        };
+        await addCategory(newCat);
+        
+        // Mejora UX: Seleccionar automáticamente la nueva categoría
+        setCategoria(newCategoryName.trim());
+        
+        setNewCategoryName('');
+        setMessage(`Categoría "${newCategoryName.trim()}" agregada.`);
+      } catch (error) {
+        setMessage('Error al agregar la categoría.');
+      }
     } else {
       setMessage('El nombre de la categoría es inválido o ya existe.');
     }
   };
 
-  // Function to add a new subcategory to the selected category
-  const handleAddNewSubcategory = () => {
-    if (newSubcategoryName.trim() && categoria) {
-      // Usar la función del contexto para añadir subcategoría
-      addSubcategory(
-        categoria,
-        {
-          name: newSubcategoryName.trim(),
-          link: `/category?cat=${encodeURIComponent(categoria)}&sub=${encodeURIComponent(newSubcategoryName.trim())}`
-        }
-      );
-      setNewSubcategoryName('');
-      setMessage(`Subcategoría "${newSubcategoryName.trim()}" agregada a "${categoria}".`);
+  const handleAddNewSubcategory = async () => {
+    const currentCategoryObj = allCategories.find(c => c.title === categoria);
+
+    if (newSubcategoryName.trim() && currentCategoryObj && currentCategoryObj.id) {
+      try {
+        const newSub: Subcategory = {
+           name: newSubcategoryName.trim(),
+           link: `/category?cat=${encodeURIComponent(categoria)}&sub=${encodeURIComponent(newSubcategoryName.trim())}`
+        };
+
+        await addSubcategory(currentCategoryObj.id, newSub);
+
+        // Mejora UX: Seleccionar automáticamente la nueva subcategoría
+        setSubcategoria(newSubcategoryName.trim());
+
+        setNewSubcategoryName('');
+        setMessage(`Subcategoría "${newSubcategoryName.trim()}" agregada a "${categoria}".`);
+      } catch (error) {
+         setMessage('Error al agregar subcategoría.');
+      }
     } else {
-      setMessage('El nombre de la subcategoría es inválido o no se ha seleccionado una categoría.');
+      setMessage('Nombre inválido o categoría no seleccionada.');
     }
   };
 
@@ -101,14 +131,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
     const catTitle = e.target.value;
     setCategoria(catTitle);
     setSubcategoria('');
-    const selectedCategory = allCategories.find(c => c.title === catTitle);
-    setSubcategoriasDisponibles(selectedCategory ? selectedCategory.subcategories.map(s => s.name) : []);
+    // El useEffect se encargará de actualizar las subcategorías disponibles
   };
 
-  const updatePreview = (src: string | null) => {
-    setPreview(src);
-  };
-
+  // ... (Funciones de imagen handleFileChange, handleUrlChange, updatePreview iguales) ...
+  const updatePreview = (src: string | null) => { setPreview(src); };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -118,23 +145,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
       setImagenUrl('');
     }
   };
-
   const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value.trim();
     setImagenUrl(url);
     updatePreview(url || null);
   };
 
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!nombre || !descripcion || isNaN(precio) || !categoria || !subcategoria || !marca) {
+
+    const imagen = preview || '';
+
+    if (!nombre || !descripcion || isNaN(precio) || !categoria || !subcategoria || !marca || !imagen) {
       setMessage('Todos los campos obligatorios deben completarse.');
       return;
     }
 
     let productCodigo = productToEdit?.codigo;
 
-    // Solo generamos un nuevo código si NO estamos editando un producto existente
+    // Generación de código (Lógica mantenida)
     if (!productCodigo) {
       const getPrefix = (subcatName: string, catTitle: string) => {
         for (const cat of allCategories) {
@@ -156,165 +186,137 @@ const ProductForm: React.FC<ProductFormProps> = ({ onAddProduct, productToEdit }
       };
 
       const prefix = getPrefix(subcategoria, categoria);
-
       const productosEnSubcategoria = products.filter(p => p.subcategoria === subcategoria);
       const ultimoNumero = productosEnSubcategoria.length > 0
-        ? Math.max(...productosEnSubcategoria.map(p => parseInt(p.codigo.slice(prefix.length)))) + 1
+        ? Math.max(...productosEnSubcategoria.map(p => parseInt(p.codigo.slice(prefix.length)) || 0)) + 1
         : 1;
       productCodigo = prefix + ultimoNumero.toString().padStart(3, '0');
     }
-
-    const imagen = preview || '';
 
     const productToSubmit: Product = {
       codigo: productCodigo,
       nombre,
       descripcion,
       precio,
-      categoria,
-      subcategoria,
+      categoria, 
+      subcategoria, 
       imagen,
       marca
     };
 
-    onAddProduct(productToSubmit); // onAddProduct ahora manejará add o update
+    console.log("Intentando guardar producto:", productToSubmit); // <--- DEBUG
 
-    // Limpiar formulario solo si es un nuevo producto o si se desea después de editar
-    if (!productToEdit) {
-      setNombre('');
-      setDescripcion('');
-      setPrecio(0);
-      setCategoria('');
-      setSubcategoria('');
-      setImagenUrl('');
-      setMarca('');
-      setPreview(null);
-      setSubcategoriasDisponibles([]);
-      setMessage(`Producto "${nombre}" ${productToEdit ? 'actualizado' : 'agregado'} correctamente. Código: ${productCodigo}`);
-    } else {
-      setMessage(`Producto "${nombre}" actualizado correctamente. Código: ${productCodigo}`);
+    // Llamamos a la función padre. Si esta función falla, el error debe capturarse allí.
+    try {
+        onAddProduct(productToSubmit);
+        
+        if (!productToEdit) {
+          resetForm();
+          setMessage(`Producto "${nombre}" agregado correctamente.`);
+        } else {
+          setMessage(`Producto actualizado.`);
+        }
+    } catch(err) {
+        console.error("Error al enviar producto:", err);
+        setMessage("Error al guardar el producto.");
     }
   };
 
   return (
-    // Usamos el HTML y clases de index_admin.html [cite: zevk4/level_up/Level_UP-9310edfd8117bb149283794742f89c0802893a4e/admin/index_admin.html]
     <div className="bg-gray-800 rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-4">Agregar Nuevo Producto</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {productToEdit ? 'Editar Producto' : 'Agregar Nuevo Producto'}
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         
-        {/* Nombre del Producto */}
+        {/* Nombre */}
         <div>
-          <label htmlFor="productName" className="block mb-1 font-medium">Nombre del Producto</label>
-          <input type="text" id="productName" value={nombre} onChange={(e) => setNombre(e.target.value)} required
-            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500" />
+          <label className="block mb-1 font-medium text-gray-300">Nombre del Producto</label>
+          <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required
+            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
         
         {/* Descripción */}
         <div>
-          <label htmlFor="productDescription" className="block mb-1 font-medium">Descripción</label>
-          <textarea id="productDescription" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} rows={3} required
-            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+          <label className="block mb-1 font-medium text-gray-300">Descripción</label>
+          <textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} rows={3} required
+            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white focus:ring-indigo-500 focus:border-indigo-500"></textarea>
         </div>
 
         {/* Precio */}
         <div>
-          <label htmlFor="productPrice" className="block mb-1 font-medium">Precio</label>
-          <input type="number" id="productPrice" value={precio} onChange={(e) => setPrecio(parseFloat(e.target.value))} min="0" step="1" required
-            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500" />
+          <label className="block mb-1 font-medium text-gray-300">Precio</label>
+          <input type="number" value={precio} onChange={(e) => setPrecio(parseFloat(e.target.value))} min="0" step="1" required
+            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
-        {/* Marca del Producto */}
+        {/* Marca */}
         <div>
-          <label htmlFor="productBrand" className="block mb-1 font-medium">Marca</label>
-          <input type="text" id="productBrand" value={marca} onChange={(e) => setMarca(e.target.value)} required
-            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500" />
+          <label className="block mb-1 font-medium text-gray-300">Marca</label>
+          <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} required
+            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
         {/* Categoría */}
         <div>
-          <label htmlFor="productCategory" className="block mb-1 font-medium">Categoría</label>
-          <select id="productCategory" value={categoria} onChange={handleCategoriaChange} required
-            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500">
+          <label className="block mb-1 font-medium text-gray-300">Categoría</label>
+          <select value={categoria} onChange={handleCategoriaChange} required
+            className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white focus:ring-indigo-500 focus:border-indigo-500">
             <option value="">-- Selecciona una categoría --</option>
             {allCategories.map(cat => (
-              <option key={cat.title} value={cat.title}>{cat.title}</option>
+              <option key={cat.id || cat.title} value={cat.title}>{cat.title}</option>
             ))}
           </select>
+          
           <div className="flex gap-2 mt-2">
-            <input
-              type="text"
-              placeholder="Nueva Categoría"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900"
-            />
-            <button
-              type="button"
-              onClick={handleAddNewCategory}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md"
-            >
-              +
-            </button>
+            <input type="text" placeholder="Nueva Categoría" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}
+              className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white" />
+            <button type="button" onClick={handleAddNewCategory}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md"> + </button>
           </div>
         </div>
 
-        {/* Subcategoría (Dinámica) */}
+        {/* Subcategoría */}
         {categoria && (
           <div>
-            <label htmlFor="productSubcategory" className="block mb-1 font-medium">Subcategoría</label>
-            <select id="productSubcategory" value={subcategoria} onChange={(e) => setSubcategoria(e.target.value)} required
-              className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 focus:ring-indigo-500 focus:border-indigo-500">
+            <label className="block mb-1 font-medium text-gray-300">Subcategoría</label>
+            <select value={subcategoria} onChange={(e) => setSubcategoria(e.target.value)} required
+              className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white focus:ring-indigo-500 focus:border-indigo-500">
               <option value="">-- Selecciona una subcategoría --</option>
               {subcategoriasDisponibles.map(sub => (
                 <option key={sub} value={sub}>{sub}</option>
               ))}
             </select>
+
             <div className="flex gap-2 mt-2">
-              <input
-                type="text"
-                placeholder="Nueva Subcategoría"
-                value={newSubcategoryName}
-                onChange={(e) => setNewSubcategoryName(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900"
-              />
-              <button
-                type="button"
-                onClick={handleAddNewSubcategory}
-                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md"
-              >
-                +
-              </button>
+              <input type="text" placeholder="Nueva Subcategoría" value={newSubcategoryName} onChange={(e) => setNewSubcategoryName(e.target.value)}
+                className="w-full px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white" />
+              <button type="button" onClick={handleAddNewSubcategory}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md"> + </button>
             </div>
           </div>
         )}
 
-        {/* Imagen del Producto */}
+        {/* Imagen */}
         <div>
-          <label className="block mb-1 font-medium">Imagen del Producto</label>
+          <label className="block mb-1 font-medium text-gray-300">Imagen del Producto</label>
           <div className="flex gap-2 mb-2">
-            <input type="file" id="productImageFile" accept="image/*" onChange={handleFileChange}
-              className="w-1/2 px-3 py-2 rounded-md border border-gray-600 bg-gray-900" />
-            <input type="url" id="productImageURL" placeholder="O pega un link de imagen" value={imagenUrl} onChange={handleUrlChange}
-              className="w-1/2 px-3 py-2 rounded-md border border-gray-600 bg-gray-900" />
+            <input type="file" accept="image/*" onChange={handleFileChange} className="w-1/2 px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white" />
+            <input type="url" placeholder="Link de imagen" value={imagenUrl} onChange={handleUrlChange} className="w-1/2 px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-white" />
           </div>
-          {preview && (
-            <img src={preview} alt="Previsualización"
-              className="mt-2 rounded-md w-40 h-40 object-cover" />
-          )}
+          {preview && <img src={preview} alt="Previsualización" className="mt-2 rounded-md w-40 h-40 object-cover border border-gray-600" />}
         </div>
 
-        {/* Botón de envío y mensaje */}
+        {/* Botones */}
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
-          <button type="submit"
-            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
+          <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md">
             {productToEdit ? 'Guardar Cambios' : 'Agregar Producto'}
           </button>
-          <button type="button" onClick={resetForm}
-            className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+          <button type="button" onClick={resetForm} className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
             Limpiar Formulario
           </button>
         </div>
-        {message && <p className="mt-2 text-sm">{message}</p>}
+        {message && <p className={`mt-2 text-sm ${message.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>{message}</p>}
       </form>
     </div>
   );

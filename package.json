@@ -10,6 +10,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "leaflet": "^1.9.4",
     "react": "^19.2.0",
@@ -30,9 +31,6 @@
     "test:once": "karma start --single-run",
     "test:coverage": "karma start --coverage"
   },
-
-
-
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -52,18 +50,18 @@
     ]
   },
   "devDependencies": {
-    "@types/jasmine": "^5.1.12",
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.24.0",
     "@babel/preset-typescript": "^7.24.0",
-    "babel-loader": "^9.1.3",
-    "style-loader": "^3.3.3",
-    "css-loader": "^6.8.1",
+    "@types/jasmine": "^5.1.12",
     "@types/leaflet": "^1.9.21",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.22",
+    "babel-jest": "^29.6.0",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
     "jasmine": "^5.12.0",
     "jasmine-core": "^5.12.1",
     "karma": "^6.4.4",
@@ -74,8 +72,8 @@
     "karma-sourcemap-loader": "^0.4.0",
     "karma-typescript": "^5.5.4",
     "karma-webpack": "^5.0.1",
-  "babel-jest": "^29.6.0",
     "postcss": "^8.5.6",
+    "style-loader": "^3.3.3",
     "tailwindcss": "^3.4.18"
   }
 }

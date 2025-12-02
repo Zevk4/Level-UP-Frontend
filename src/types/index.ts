@@ -9,16 +9,18 @@ export interface User {
   nombre: string;
   email: string;
   password: string;
-  role: "admin" | "vendedor" | "cliente";
+  role: "ADMIN" | "VENDEDOR" | "CLIENTE";
 }
 
 export interface AuthUser {
   nombre: string;
   email: string;
-  role: "admin" | "vendedor" | "cliente";
+  role: "ADMIN" | "VENDEDOR" | "CLIENTE";
 }
 
-// --- Tipos de Datos (Basados en tus JSON) ---
+// ============================================
+// TIPOS DE DATOS (PRODUCTOS Y CATEGORÍAS)
+// ============================================
 
 export interface Product {
   codigo: string;
@@ -31,18 +33,27 @@ export interface Product {
   marca: string;
 }
 
+// --- NUEVO: Interfaz explícita para Subcategorías ---
+export interface Subcategory {
+  id?: number; // Opcional (undefined al crear una nueva)
+  name: string;
+  link: string;
+}
+
+// --- ACTUALIZADO: Category con ID numérico ---
 export interface Category {
+  id?: number; // Ahora es number para coincidir con el backend (Long)
   title: string;
   link: string;
-  subcategories: {
-    name: string;
-    link: string;
-  }[];
+  subcategories: Subcategory[];
 }
-// --- Tipos del Carrito ---
+
+// ============================================
+// TIPOS DEL CARRITO
+// ============================================
 
 export interface CartItem {
-  product: Product; // Usa la interfaz Product de arriba
+  product: Product;
   quantity: number;
 }
 
@@ -67,10 +78,15 @@ export interface AuthResult {
 
 export interface AuthContextType {
   user: AuthUser | null;
-  login: (email: string, password: string) => AuthResult;
-  register: (nombre: string, email: string, password: string) => AuthResult;
+  login: (email: string, password: string) => Promise<AuthResult>;
+  register: (nombre: string, email: string, password: string, role?: string) => Promise<AuthResult>;
   logout: () => void;
   loading: boolean;
+}
+
+export interface LoginResponse {
+  user: AuthUser;
+  token: string;
 }
 
 // ============================================

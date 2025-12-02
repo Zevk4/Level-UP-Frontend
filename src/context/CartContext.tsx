@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Product, CartItem } from 'types';
 import { useAuth } from 'hooks/useAuth';
-import { storageService } from 'services/storageService'; // CAMBIO: Importar servicio
+import { storageService } from 'services/storageService';
+import { apiService } from 'services/apiService'; // CAMBIO: Importar servicio
 
 // 1. Definir la forma del Contexto
 interface CartContextType {
@@ -26,46 +27,86 @@ interface CartProviderProps {
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-    // 4. Estado: Inicializa el carrito desde el almacenamiento
-    const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-        // CAMBIO: Usar storageService.local
-        return storageService.local.get<CartItem[]>('cart') || [];
-    });
-
+    const [cartItems, setCartItems] = useState<CartItem[]>([]); // Initialize as empty, will load from API or localStorage
     const [isCartOpen, setIsCartOpen] = useState(false);
     const { user } = useAuth();
 
-    // 5. Efecto: Guarda el carrito CADA VEZ que cambie
+    // Function to fetch cart from backend
+    const fetchCart = async () => {
+        if (user) {
+            try {
+                const response = await apiService.get('/cart');
+                setCartItems(response.data as CartItem[]);
+            } catch (error) {
+                console.error('Error fetching cart from backend:', error);
+                setCartItems([]);
+            }
+        } else {
+            // For guest users, load from localStorage
+            setCartItems(storageService.local.get<CartItem[]>('cart') || []);
+        }
+    };
+
+    // Effect to load cart on component mount or user change
     useEffect(() => {
-        // CAMBIO: Usar storageService.local
-        storageService.local.set('cart', cartItems);
-    }, [cartItems]);
+        fetchCart();
+    }, [user]); // Re-fetch cart when user logs in or out
 
     // --- Funciones del Carrito ---
 
-    const addToCart = (product: Product) => {
-        setCartItems(prevItems => {
-            const existingItem = prevItems.find(item => item.product.codigo === product.codigo);
-            if (existingItem) {
-                return prevItems.map(item =>
-                    item.product.codigo === product.codigo
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
-                );
+    const addToCart = async (product: Product) => {
+        try {
+            if (user) {
+                const response = await apiService.post('/cart/add', { productId: product.codigo, quantity: 1 });
+                setCartItems(response.data as CartItem[]);
             } else {
-                return [...prevItems, { product: product, quantity: 1 }];
+                setCartItems(prevItems => {
+                    const existingItem = prevItems.find(item => item.product.codigo === product.codigo);
+                    if (existingItem) {
+                        return prevItems.map(item =>
+                            item.product.codigo === product.codigo
+                                ? { ...item, quantity: item.quantity + 1 }
+                                : item
+                        );
+                    } else {
+                        return [...prevItems, { product: product, quantity: 1 }];
+                    }
+                });
+                storageService.local.set('cart', cartItems); // Update localStorage for guest
             }
-        });
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
     };
 
-    const removeFromCart = (codigo: string) => {
-        setCartItems(prevItems => {
-            return prevItems.filter(item => item.product.codigo !== codigo);
-        });
+    const removeFromCart = async (codigo: string) => {
+        try {
+            if (user) {
+                const response = await apiService.post('/cart/remove', { productId: codigo });
+                setCartItems(response.data as CartItem[]);
+            } else {
+                setCartItems(prevItems => {
+                    return prevItems.filter(item => item.product.codigo !== codigo);
+                });
+                storageService.local.set('cart', cartItems); // Update localStorage for guest
+            }
+        } catch (error) {
+            console.error('Error removing from cart:', error);
+        }
     };
 
-    const clearCart = () => {
-        setCartItems([]);
+    const clearCart = async () => {
+        try {
+            if (user) {
+                await apiService.post('/cart/clear');
+                setCartItems([]);
+            } else {
+                setCartItems([]);
+                storageService.local.remove('cart'); // Clear localStorage for guest
+            }
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+        }
     };
 
     const getItemCount = () => {

@@ -22,7 +22,7 @@ const AdminRoute: React.FC = () => {
   }
 
   // 5. Verificamos si el usuario es admin
-  if (!user || user.role !== 'admin') {
+  if (!user || user.role !== 'ADMIN') {
     // Si no hay usuario o no es admin, redirige a la página de inicio
     return <Navigate to="/" replace />;
   }

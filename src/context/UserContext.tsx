@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User } from 'types';
-import usersData from 'data/users.json';
-import { storageService } from 'services/storageService';
+import { User } from '../types'; // Ajusta la ruta de importación si es necesario
+import { apiService } from '../services/apiService';
 
 // --- Definición del Contexto ---
 interface UserContextType {
   users: User[];
-  addUser: (newUser: User) => void;
-  updateUser: (updatedUser: User) => void;
-  deleteUser: (userId: number) => void;
+  // Actualizamos para que retornen Promesas y el formulario pueda usar await
+  addUser: (newUser: User) => Promise<void>;
+  updateUser: (updatedUser: User) => Promise<void>;
+  deleteUser: (userId: number) => Promise<void>;
   loading: boolean;
 }
 
@@ -30,56 +30,51 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
+  const loadUsers = async () => {
     try {
-      const storedUsers = storageService.local.get<User[]>('users');
-      if (storedUsers) {
-        setUsers(storedUsers);
-      } else {
-        setUsers(usersData as User[]);
-        storageService.local.set('users', usersData as User[]);
-      }
+      const response = await apiService.get('/users');
+      setUsers(response.data as User[]);
     } catch (error) {
-      console.error('Error al cargar usuarios:', error);
-      setUsers(usersData as User[]);
+      console.error('Error cargando usuarios:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    loadUsers();
   }, []);
 
-  const addUser = (newUser: User) => {
+  const addUser = async (newUser: User) => {
     try {
-      // Asignar un ID único al nuevo usuario
-      const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-      const userWithId = { ...newUser, id: newId };
-      const updatedUsers = [...users, userWithId];
-      setUsers(updatedUsers);
-      storageService.local.set('users', updatedUsers);
+      // --- CORRECCIÓN AQUÍ: Agregamos "/create" ---
+      const response = await apiService.post('/users/create', newUser);
+      setUsers(prev => [...prev, response.data as User]);
     } catch (error) {
       console.error('Error al agregar usuario:', error);
+      throw error; // Lanzamos el error para que el formulario sepa que falló
     }
   };
 
-  const updateUser = (updatedUser: User) => {
+  const updateUser = async (updatedUser: User) => {
     try {
-      const updatedUsers = users.map((user) =>
-        user.id === updatedUser.id ? updatedUser : user
-      );
-      setUsers(updatedUsers);
-      storageService.local.set('users', updatedUsers);
+      // Nota: Verifica si tu backend usa /users/{id} o /users/update/{id}
+      // Por estándar suele ser directo al ID, así que lo dejo así:
+      const response = await apiService.put(`/users/${updatedUser.id}`, updatedUser);
+      setUsers(prev => prev.map(user => (user.id === updatedUser.id ? response.data as User : user)));
     } catch (error) {
       console.error('Error al actualizar usuario:', error);
+      throw error;
     }
   };
 
-  const deleteUser = (userId: number) => {
+  const deleteUser = async (userId: number) => {
     try {
-      const updatedUsers = users.filter((user) => user.id !== userId);
-      setUsers(updatedUsers);
-      storageService.local.set('users', updatedUsers);
+      await apiService.delete(`/users/${userId}`);
+      setUsers(prev => prev.filter(user => user.id !== userId));
     } catch (error) {
       console.error('Error al eliminar usuario:', error);
+      throw error;
     }
   };
 

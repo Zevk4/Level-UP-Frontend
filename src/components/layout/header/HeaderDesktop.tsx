@@ -102,7 +102,7 @@ const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
                     </Nav.Link>
 
                     {/* Botón para Admin */}
-                    {user && user.role === 'admin' && (
+                    {user && user.role === 'ADMIN' && (
                         <Nav.Link as={Link} to="/admin" className="text-white ms-3">
                             <b>Panel de Admin</b>
                         </Nav.Link>

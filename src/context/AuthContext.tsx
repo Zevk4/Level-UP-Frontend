@@ -1,7 +1,9 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
-import { AuthContextType, AuthUser, AuthResult, User } from 'types';
-import usersData from 'data/users.json';
+import { AuthContextType, AuthUser, AuthResult, LoginResponse } from 'types';
+
 import { storageService } from 'services/storageService';
+import { apiService } from 'services/apiService';
+import { AxiosError } from 'axios';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -9,7 +11,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const typedUsersData = usersData as User[];
+
 
 // Type guard to validate the AuthUser object structure
 const isAuthUser = (obj: any): obj is AuthUser => {
@@ -17,7 +19,7 @@ const isAuthUser = (obj: any): obj is AuthUser => {
     obj &&
     typeof obj.nombre === 'string' &&
     typeof obj.email === 'string' &&
-    ['admin', 'vendedor', 'cliente'].includes(obj.role)
+    ['ADMIN', 'VENDEDOR', 'CLIENTE'].includes(obj.role)
   );
 };
 
@@ -49,100 +51,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loadUser();
   }, []);
 
-  // Función de login
-  const login = (email: string, password: string): AuthResult => {
-    // !! NOTA DE SEGURIDAD !!
-    // La validación de contraseña NUNCA debe hacerse en el frontend.
-    // Esto es solo una simulación. En una aplicación real, el email y la contraseña
-    // se enviarían a un servidor seguro que haría la verificación con un hash.
+  const login = async (email: string, password: string): Promise<AuthResult> => {  
+    try {  
+      const response = await apiService.post('/auth/login', { email, password });  
+      const { user, token } = response.data as LoginResponse;  
+        
+      localStorage.setItem('token', token);  
+      storageService.local.set('loggedInUser', user);  
+      setUser(user);  
+      return { success: true, user, message: 'Login exitoso' };  
+    } catch (error) {  
+      return { success: false, message: 'Credenciales inválidas' };  
+    }  
+  }
+
+  const register = async (nombre: string, email: string, password: string, role: string = 'CLIENTE'): Promise<AuthResult> => {
     try {
-      // Buscar en datos estáticos
-      let foundUser = typedUsersData.find((u) => u.email === email);
-
-      // Si no se encuentra, buscar en usuarios registrados localmente
-      if (!foundUser) {
-        const localUsers = storageService.local.get<User[]>('users') || [];
-        foundUser = localUsers.find((u) => u.email === email);
-      }
-
-      if (foundUser) {
-        // En una app real, aquí se compararía el hash de la contraseña.
-        // Como esto es solo frontend, simulamos un éxito si el usuario existe.
-        const userData: AuthUser = {
-          nombre: foundUser.nombre,
-          email: foundUser.email,
-          role: foundUser.role,
-        };
-
-        setUser(userData);
-        storageService.local.set('loggedInUser', userData);
-
-        return {
-          success: true,
-          user: userData,
-          message: '¡Inicio de sesión exitoso!',
-        };
-      }
-
-      return {
-        success: false,
-        message: 'Email o contraseña incorrectos',
-      };
+      await apiService.post('/auth/register', { nombre, email, password, role });
+      return { success: true, message: 'Registro exitoso. Por favor inicia sesión.' };
     } catch (error) {
-      console.error('Error en login:', error);
-      return {
-        success: false,
-        message: 'Error al iniciar sesión. Intenta nuevamente.',
-      };
-    }
-  };
-
-  // Función de registro
-  const register = (nombre: string, email: string, password: string): AuthResult => {
-    // !! NOTA DE SEGURIDAD !!
-    // NUNCA guardes contraseñas en texto plano. En una aplicación real,
-    // la contraseña se enviaría a un servidor para ser "hasheada" y almacenada de forma segura.
-    try {
-      const existsInPreUsers = typedUsersData.some((u) => u.email === email);
-      if (existsInPreUsers) {
-        return {
-          success: false,
-          message: 'El email ya está registrado',
-        };
+      if (error instanceof AxiosError && error.response && error.response.status === 409) {
+        return { success: false, message: 'El email ya está registrado.' };
       }
-
-      const localUsers = storageService.local.get<User[]>('users') || [];
-      const existsInLocalUsers = localUsers.some((u) => u.email === email);
-
-      if (existsInLocalUsers) {
-        return {
-          success: false,
-          message: 'El email ya está registrado',
-        };
-      }
-
-      const newUser: User = {
-        id: Date.now(),
-        nombre,
-        email,
-        // NUNCA hacer esto en producción. Solo para simulación de un hash.
-        password: `hashed_${password}_demo`,
-        role: 'cliente',
-      };
-
-      localUsers.push(newUser);
-      storageService.local.set('users', localUsers);
-
-      return {
-        success: true,
-        message: '¡Registro exitoso! Ahora puedes iniciar sesión',
-      };
-    } catch (error) {
-      console.error('Error en registro:', error);
-      return {
-        success: false,
-        message: 'Error al registrar. Intenta nuevamente.',
-      };
+      return { success: false, message: 'Error al registrar. Intenta nuevamente.' };
     }
   };
 

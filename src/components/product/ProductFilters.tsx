@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Product } from '../../types';
+import { useCategories } from '../../context/CategoryContext';
 import '../../styles/ProductFilters.css';
 
 interface ProductFiltersProps {
@@ -37,6 +38,8 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   onFilterChange,
   initialFilters,
 }) => {
+  const { categories } = useCategories();
+
   const [selectedBrands, setSelectedBrands] = useState<string[]>(
     initialFilters?.brands || []
   );
@@ -57,6 +60,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     products.forEach((product) => brands.add(product.marca));
     return Array.from(brands).sort();
   }, [products]);
+
+  const availableCategories = useMemo(() => {
+    return categories.map(cat => cat.title).sort();
+  }, [categories]);
 
   useEffect(() => {
     onFilterChange({
@@ -152,7 +159,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               />
               <label htmlFor="category-all" className="ms-2 mb-0">Todas</label>
             </div>
-            {CATEGORIES.map((category) => (
+            {availableCategories.map((category) => (
               <div key={category} className="d-flex align-items-center mb-2">
                 <input
                   type="checkbox"
